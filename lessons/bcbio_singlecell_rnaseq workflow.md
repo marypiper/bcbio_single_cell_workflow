@@ -14,7 +14,9 @@
 		unzip BaseSpaceRunDownloader_v2.zip
 		python BaseSpaceRunDownloader_v2.py -r <Run ID> -a <access token>
 		```
+		
 		The option `-r` is the number in the basespace url and the `access token` is something you have to get for your basespace account. 
+		
 		More information can be found at
 [https://developer.basespace.illumina.com/docs/content/documentation/authentication/obtaining-access-tokens](https://developer.basespace.illumina.com/docs/content/documentation/authentication/obtaining-access-tokens). The files output will be BCL files that require demultiplexing with the `bcl2fastq` tool (instructions below).
 
