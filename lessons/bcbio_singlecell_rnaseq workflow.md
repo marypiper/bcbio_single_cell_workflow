@@ -21,7 +21,7 @@
 
 	- **DFCI sequencing center (Zach)** will output the FASTQ files (already demultiplexed).
 	- **Biopolymers sequencing facility** will sometimes output BCL and sometimes FASTQ, so necessary to check the files
-	- **Broad Institute** has their own single cell distribution platfrom
+	- **Broad Institute** has their own single cell distribution platform
 
 3. If downloaded sequencing files are BCL format, then need to convert to FASTQ. To do this log on to Orchestra or O2 to run `bcl2fastq`. Currently the module is only available on Orchestra.
 
