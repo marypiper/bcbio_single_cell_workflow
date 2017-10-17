@@ -10,7 +10,7 @@
 	- **Bauer sequencing core** uses Basespace and to download the sequencing files, follow the code below:
 
 		```
-		wget https://da1s119xsxmu0.cloudfront.net/sites/knowledgebase/API/08052014/Script/	BaseSpaceRunDownloader_v2.zip
+		wget https://da1s119xsxmu0.cloudfront.net/sites/knowledgebase/API/08052014/Script/BaseSpaceRunDownloader_v2.zip
 		unzip BaseSpaceRunDownloader_v2.zip
 		python BaseSpaceRunDownloader_v2.py -r <Run ID> -a <access token>
 		```
