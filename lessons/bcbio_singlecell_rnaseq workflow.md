@@ -84,6 +84,7 @@
 	
 	# Perform the checksums
 	sum Mus_musculus.GRCm38.cdna.all.fa.gz
+	sum Mus_musculus.GRCm38.90.gtf.gz
 	```
 
 9. Create configuration template for single cell run:
