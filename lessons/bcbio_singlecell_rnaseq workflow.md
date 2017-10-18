@@ -107,6 +107,25 @@ details:
 ```
 
 10. 
+
+11. Submit to O2:
+
+```
+#!/bin/sh
+#SBATCH -p medium
+#SBATCH -J win-full
+#SBATCH -o run.o
+#SBATCH -e run.e
+#SBATCH -t 4-00:00
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=8000
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=piper@hsph.harvard.edu
+
+export PATH=/n/app/bcbio/tools/bin:$PATH
+
+/n/app/bcbio/dev/anaconda/bin/bcbio_nextgen.py ../config/PI_name.yaml -n 48 -t ipython -s slurm -q medium -r t=4-00:00
+```
 	
 
 	
