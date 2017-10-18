@@ -89,7 +89,18 @@
 
 9. Create configuration template for single cell run:
 
+details:
+  - analysis: scRNA-seq
+    algorithm:
+      transcriptome_fasta: /n/data1/cores/bcbio/PIs/PI_name/meta/Mus_musculus.GRCm38.cdna.all.fa.gz
+      transcriptome_gtf: /n/data1/cores/bcbio/PIs/PI_name/meta/Mus_musculus.GRCm38.90.gtf.gz
+      umi_type: harvard-indrop-v3
+      minimum_barcode_depth: 10000
+      cellular_barcode_correction: 1
+      sample_barcodes: /n/data1/cores/bcbio/PIs/PI_name/meta/hbc02055-sample-barcodes-rc.txt
+    genome_build: mm10
 
+10. 
 	
 
 	
