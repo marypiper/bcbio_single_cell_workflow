@@ -89,6 +89,7 @@
 
 9. Create configuration template for single cell run:
 
+	```
 details:
   - analysis: scRNA-seq
     algorithm:
@@ -99,6 +100,7 @@ details:
       cellular_barcode_correction: 1
       sample_barcodes: /n/data1/cores/bcbio/PIs/PI_name/meta/hbc02055-sample-barcodes-rc.txt
     genome_build: mm10
+	```
 
 10. 
 	
