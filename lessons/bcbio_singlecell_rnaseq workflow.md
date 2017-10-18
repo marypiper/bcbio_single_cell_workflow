@@ -71,7 +71,13 @@
 	```
 	Do the same for the R2, R3, and R4 files.
 
-7. Use the information from the client to construct the metadata table according to the specifications detailed at [https://github.com/hbc/bcbioSingleCell](https://github.com/hbc/bcbioSingleCell).
+7. Create metadata file as normal for bcbio run.
+
+	```
+	fileName,description
+	cat,run1
+	```
+
 
 8. Download the most recent transcriptome FASTA and GTF (patched scaffold) files:
 
@@ -106,9 +112,13 @@ details:
     genome_build: mm10
 ```
 
-10. 
+10. Normal bcbio configuration file creation:
 
-11. Submit to O2:
+	```
+	bcbio_nextgen.py -w template ../config/scRNAseq_config_template.yaml ../meta/PI_name.csv ../hbcXXXXX/seq_dir/Data/Intensities/BaseCalls/cat*fastq.gz
+	```
+
+11. Create script (below) to run job on O2 and run with `sbatch ../../runJob-PI_name--scRNAseq.slurm`:
 
 ```
 #!/bin/sh
@@ -126,6 +136,8 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 
 /n/app/bcbio/dev/anaconda/bin/bcbio_nextgen.py ../config/PI_name.yaml -n 48 -t ipython -s slurm -q medium -r t=4-00:00
 ```
-	
 
+
+	
+Use the information from the client to construct the metadata table to use with bcbioSingleCell R package according to the specifications detailed at [https://github.com/hbc/bcbioSingleCell](https://github.com/hbc/bcbioSingleCell).
 	
