@@ -73,18 +73,22 @@
 
 7. Use the information from the client to construct the metadata table according to the specifications detailed at [https://github.com/hbc/bcbioSingleCell](https://github.com/hbc/bcbioSingleCell).
 
-8. Download the most recent transcriptome FASTA and GTF files:
+8. Download the most recent transcriptome FASTA and GTF (patched scaffold) files:
 
 	```
 	# Most recent mouse FASTA from Ensembl FTP
 	wget ftp://ftp.ensembl.org/pub/current_fasta/mus_musculus/cdna/Mus_musculus.GRCm38.cdna.all.fa.gz
 	
 	# Most recent mouse GTF from Ensembl FTP
-	wget ftp://ftp.ensembl.org/pub/current_gtf/mus_musculus/Mus_musculus.GRCm38.90.gtf.gz
+	wget ftp://ftp.ensembl.org/pub/current_gtf/mus_musculus/Mus_musculus.GRCm38.90.chr_patch_hapl_scaff.gtf.gz
 	
 	# Perform the checksums
 	sum Mus_musculus.GRCm38.cdna.all.fa.gz
-	sum Mus_musculus.GRCm38.90.gtf.gz
+	sum Mus_musculus.GRCm38.90.chr_patch_hapl_scaff.gtf.gz
+	
+	# Decompress FASTA and GTF to run in bcbio
+	gzip -d Mus_musculus.GRCm38.cdna.all.fa.gz
+	gzip -d Mus_musculus.GRCm38.90.chr_patch_hapl_scaff.gtf.gz
 	```
 
 9. Create configuration template for single cell run:
@@ -93,10 +97,10 @@
 details:
   - analysis: scRNA-seq
     algorithm:
-      transcriptome_fasta: /n/data1/cores/bcbio/PIs/PI_name/meta/Mus_musculus.GRCm38.cdna.all.fa.gz
-      transcriptome_gtf: /n/data1/cores/bcbio/PIs/PI_name/meta/Mus_musculus.GRCm38.90.gtf.gz
+      transcriptome_fasta: /n/data1/cores/bcbio/PIs/PI_name/meta/Mus_musculus.GRCm38.cdna.all.fa
+      transcriptome_gtf: /n/data1/cores/bcbio/PIs/PI_name/meta/Mus_musculus.GRCm38.90.gtf
       umi_type: harvard-indrop-v3
-      minimum_barcode_depth: 10000
+      minimum_barcode_depth: 1000
       cellular_barcode_correction: 1
       sample_barcodes: /n/data1/cores/bcbio/PIs/PI_name/meta/hbc02055-sample-barcodes-rc.txt
     genome_build: mm10
