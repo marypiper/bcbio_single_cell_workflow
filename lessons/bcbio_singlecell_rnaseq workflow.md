@@ -54,14 +54,41 @@
 
 	<img src="../img/sc_seq_method.png" width="800">
 	
-5. To quickly count up the FASTQ entries in a file:
+5. To quickly view the counts for the barcodes with the top five highest counts based on the first 10,000 reads in a file:
 
 	```
 	gzip -cd filename_R3.fq.gz | head -40000 | awk 'NR % 4 == 2' | sort | uniq -c | awk 	'{ print $2 "," $1}' | sort -t"," -n --key=2 | tail -5
 	```
 	
 	*NOTE: ``awk 'NR % 4 == 2'` gets every 4th line starting from the 2nd, which is a useful trick when you want to count up FASTQ file entries*
-	
-6. Use the information from the client to construct the metadata table according to the specifications detailed at [https://github.com/hbc/bcbioSingleCell](https://github.com/hbc/bcbioSingleCell).
 
-6. 
+	The reverse complement sequences of the sample indices given by the client should correspond to the most abundant indices in the file.
+	
+6. Use the `cat` command to concatenate all of the files for a given sample across lanes:
+
+	```
+	cat Undetermined_S0_L001_R1_001.fastq.gz Undetermined_S0_L002_R1_001.fastq.gz Undetermined_S0_L003_R1_001.fastq.gz Undetermined_S0_L004_R1_001.fastq.gz > cat_R1.fastq.gz
+	```
+	Do the same for the R2, R3, and R4 files.
+
+7. Use the information from the client to construct the metadata table according to the specifications detailed at [https://github.com/hbc/bcbioSingleCell](https://github.com/hbc/bcbioSingleCell).
+
+8. Download the most recent transcriptome FASTA and GTF files:
+
+	```
+	# Most recent mouse FASTA from Ensembl FTP
+	wget ftp://ftp.ensembl.org/pub/current_fasta/mus_musculus/cdna/Mus_musculus.GRCm38.cdna.all.fa.gz
+	
+	# Most recent mouse GTF from Ensembl FTP
+	wget ftp://ftp.ensembl.org/pub/current_gtf/mus_musculus/Mus_musculus.GRCm38.90.gtf.gz
+	
+	# Perform the checksums
+	sum Mus_musculus.GRCm38.cdna.all.fa.gz
+	```
+
+9. Create configuration template for single cell run:
+
+
+	
+
+	
