@@ -138,7 +138,7 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 ```
 
 >**NOTE:** The bcbio single cell RNA-Seq pipeline will perform the following steps:
->
+>	1. Identify the sample barcodes provided in the `config` file using the `sample_barcodes:` parameter. 
 	
 12. Use the information from the client to construct the metadata table to use with bcbioSingleCell R package according to the specifications detailed at [https://github.com/hbc/bcbioSingleCell](https://github.com/hbc/bcbioSingleCell).
 	
