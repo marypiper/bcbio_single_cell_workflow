@@ -138,7 +138,12 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 ```
 
 >**NOTE:** The bcbio single cell RNA-Seq pipeline will perform the following steps:
->	1. Identify the sample barcodes provided in the `config` file using the `sample_barcodes:` parameter. 
+>	1. Identify the sample barcodes in the R3 read, which were provided in the `config` file with the `sample_barcodes:` parameter. A single mismatch between known sample barcodes and sequences is allowed.
+	2. Identify the cellular barcodes by parsing the R2 and R4 reads. The cellular barcodes are present in the hydrogels, which are encapsulated in the droplets with a single cell and lysis/reaction mixture. Upon treatment of UV and cell lysis, all components mix together inside the droplet and reverse transcription proceeds, followed by droplet breakup and linear amplification for library preparation. **While each hydrogel should have a single cellular barcode associated with it, occasionally a hydrogel can have more than one cellular barcode, and we often see at least one cell with each of the different combinations of cellular barcodes, leading to a higher number of cellular barcodes than cells.**
+	3. Identify the unique molecular identifiers (UMIs) by parsing R4 read.
+	4. Filter sequence data with corresponding cellular barcodes matching less than 1000 reads (indicating poor quality cells due to encapsulation of free floating RNA from dying cells, small cells, or set of cells that failed for some reason.
+	5. Align reads with Rapmap
+	6. Take unassigned reads that mapped to more than one transcript and divide the count between all of the transcripts the reads to which they aligned.
 	
 12. Use the information from the client to construct the metadata table to use with bcbioSingleCell R package according to the specifications detailed at [https://github.com/hbc/bcbioSingleCell](https://github.com/hbc/bcbioSingleCell).
 	
