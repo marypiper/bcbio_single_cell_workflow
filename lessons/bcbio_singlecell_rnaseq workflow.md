@@ -54,7 +54,7 @@
 
 	<img src="../img/sc_seq_method.png" width="800">
 	
-	*Image credit: Sarah Boswell, Staff Scientist for Sequencing Technologies*
+	*Image credit: Sarah Boswell, Harvard Staff Scientist for Sequencing Technologies*
 
 	
 5. To quickly view the counts for the barcodes with the top five highest counts based on the first 10,000 reads in a file:
