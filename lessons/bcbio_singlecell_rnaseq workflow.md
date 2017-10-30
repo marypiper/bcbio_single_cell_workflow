@@ -143,7 +143,7 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 >	3. Identify the unique molecular identifiers (UMIs) by parsing R4 read.
 >	4. Filter sequence data with corresponding cellular barcodes matching less than 1000 reads (indicating poor quality cells due to encapsulation of free floating RNA from dying cells, small cells, or set of cells that failed for some reason. The threshold for the number of matching reads used for filtering can be specified in the `config` file with the `minimum_barcode_depth` parameter
 >	5. Align reads with Rapmap tool.
->	6. Take unassigned reads that mapped to more than one transcript and divide the count between all of the transcripts the reads to which they aligned.
+>	6. Take unassigned reads that mapped to more than one transcript and divide the count between all of the transcripts to which the reads aligned.
 	
 12. Use the information from the client to construct the metadata table to use with bcbioSingleCell R package according to the specifications detailed at [https://github.com/hbc/bcbioSingleCell](https://github.com/hbc/bcbioSingleCell).
 	
