@@ -140,7 +140,7 @@ details:
 	bcbio_nextgen.py -w template ../config/scRNAseq_config_template.yaml ../meta/PI_name.csv ../hbcXXXXX/seq_dir/Data/Intensities/BaseCalls/cat*fastq.gz
 	```
 
-3. Create script (below) to run job on O2 and run with `sbatch ../../runJob-PI_name--scRNAseq.slurm`:
+3. Create script (below) to run job on O2 and run with `sbatch ../../runJob-PI_name-scRNAseq.slurm`:
 
 ```
 #!/bin/sh
