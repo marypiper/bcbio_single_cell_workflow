@@ -1,6 +1,6 @@
 # bcbio_singlecell_rnaseq workflow
 
-## Set up for running bcbio for single cell data
+## Setting up for bcbio single cell RNA-Seq analysis
 
 1. Ask client for the following:
 	- How many samples were sequenced?
@@ -101,7 +101,7 @@
 	gzip -d Mus_musculus.GRCm38.cdna.all.fa.gz
 	gzip -d Mus_musculus.GRCm38.90.chr_patch_hapl_scaff.gtf.gz
 	```
-## Bcbio single cell workflow on O2
+## Overview of bcbio single cell RNA-Seq workflow on O2
 
 The bcbio single cell RNA-Seq pipeline will perform the following steps:
 
@@ -117,7 +117,7 @@ The bcbio single cell RNA-Seq pipeline will perform the following steps:
 
 6. Take unassigned reads that mapped to more than one transcript and divide the count between all of the transcripts to which the reads aligned.
 
-## Running bcbio single cell workflow
+## Running bcbio single cell RNA-Seq workflow on O2
 
 1. Create configuration template for single cell run:
 
@@ -159,7 +159,7 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 /n/app/bcbio/dev/anaconda/bin/bcbio_nextgen.py ../config/PI_name.yaml -n 48 -t ipython -s slurm -q medium -r t=4-00:00
 ```
 
+## Analyzing bcbio single cell RNA-Seq output using the bcbioSingleCell R package
 
-	
 12. Use the information from the client to construct the metadata table to use with bcbioSingleCell R package according to the specifications detailed at [https://github.com/hbc/bcbioSingleCell](https://github.com/hbc/bcbioSingleCell).
 	
