@@ -1,5 +1,7 @@
 # bcbio_singlecell_rnaseq workflow
 
+## Set up for running bcbio for single cell data
+
 1. Ask client for the following:
 	- How many samples were sequenced?
 	- What were the sample indices used?
@@ -99,8 +101,25 @@
 	gzip -d Mus_musculus.GRCm38.cdna.all.fa.gz
 	gzip -d Mus_musculus.GRCm38.90.chr_patch_hapl_scaff.gtf.gz
 	```
+## Bcbio single cell workflow on O2
 
-9. Create configuration template for single cell run:
+The bcbio single cell RNA-Seq pipeline will perform the following steps:
+
+1. Identify the sample barcodes in the R3 read, which were provided in the `config` file with the `sample_barcodes` parameter. A single mismatch between known sample barcodes and sequences is allowed.
+
+2. Identify the cellular barcodes by parsing the R2 and R4 reads. The cellular barcodes are present in the hydrogels, which are encapsulated in the droplets with a single cell and lysis/reaction mixture. Upon treatment of UV and cell lysis, all components mix together inside the droplet and reverse transcription proceeds, followed by droplet breakup and linear amplification for library preparation. **While each hydrogel should have a single cellular barcode associated with it, occasionally a hydrogel can have more than one cellular barcode, and we often see at least one cell with each of the different combinations of cellular barcodes, leading to a higher number of cellular barcodes than cells.**
+
+3. Identify the unique molecular identifiers (UMIs) by parsing R4 read.
+
+4. Filter sequence data with corresponding cellular barcodes matching less than 1000 reads (indicating poor quality cells due to encapsulation of free floating RNA from dying cells, small cells, or set of cells that failed for some reason. The threshold for the number of matching reads used for filtering can be specified in the `config` file with the `minimum_barcode_depth` parameter
+
+5. Align reads with Rapmap tool.
+
+6. Take unassigned reads that mapped to more than one transcript and divide the count between all of the transcripts to which the reads aligned.
+
+## Running bcbio single cell workflow
+
+1. Create configuration template for single cell run:
 
 ```
 details:
@@ -115,13 +134,13 @@ details:
     genome_build: mm10
 ```
 
-10. Normal bcbio configuration file creation:
+2. Normal bcbio configuration file creation:
 
 	```
 	bcbio_nextgen.py -w template ../config/scRNAseq_config_template.yaml ../meta/PI_name.csv ../hbcXXXXX/seq_dir/Data/Intensities/BaseCalls/cat*fastq.gz
 	```
 
-11. Create script (below) to run job on O2 and run with `sbatch ../../runJob-PI_name--scRNAseq.slurm`:
+3. Create script (below) to run job on O2 and run with `sbatch ../../runJob-PI_name--scRNAseq.slurm`:
 
 ```
 #!/bin/sh
@@ -140,13 +159,7 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 /n/app/bcbio/dev/anaconda/bin/bcbio_nextgen.py ../config/PI_name.yaml -n 48 -t ipython -s slurm -q medium -r t=4-00:00
 ```
 
->**NOTE:** The bcbio single cell RNA-Seq pipeline will perform the following steps:
->	1. Identify the sample barcodes in the R3 read, which were provided in the `config` file with the `sample_barcodes` parameter. A single mismatch between known sample barcodes and sequences is allowed.
->	2. Identify the cellular barcodes by parsing the R2 and R4 reads. The cellular barcodes are present in the hydrogels, which are encapsulated in the droplets with a single cell and lysis/reaction mixture. Upon treatment of UV and cell lysis, all components mix together inside the droplet and reverse transcription proceeds, followed by droplet breakup and linear amplification for library preparation. **While each hydrogel should have a single cellular barcode associated with it, occasionally a hydrogel can have more than one cellular barcode, and we often see at least one cell with each of the different combinations of cellular barcodes, leading to a higher number of cellular barcodes than cells.**
->	3. Identify the unique molecular identifiers (UMIs) by parsing R4 read.
->	4. Filter sequence data with corresponding cellular barcodes matching less than 1000 reads (indicating poor quality cells due to encapsulation of free floating RNA from dying cells, small cells, or set of cells that failed for some reason. The threshold for the number of matching reads used for filtering can be specified in the `config` file with the `minimum_barcode_depth` parameter
->	5. Align reads with Rapmap tool.
->	6. Take unassigned reads that mapped to more than one transcript and divide the count between all of the transcripts to which the reads aligned.
+
 	
 12. Use the information from the client to construct the metadata table to use with bcbioSingleCell R package according to the specifications detailed at [https://github.com/hbc/bcbioSingleCell](https://github.com/hbc/bcbioSingleCell).
 	
