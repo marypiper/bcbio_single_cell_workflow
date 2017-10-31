@@ -194,7 +194,7 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 	
 	Reading in the GTF file can take a long time.
 
-15. Follow template:
+15. Follow template - run entire `r setup` chunk by clicking on the green triangle at the top of the setup chunk (if you clear your environment, you need to run the chunk this way to make the `params` reappear.
 
 	```r
 	# Shared RMarkdown settings
