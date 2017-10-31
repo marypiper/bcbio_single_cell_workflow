@@ -114,7 +114,7 @@ The bcbio single cell RNA-Seq pipeline will perform the following steps:
 
 3. Identify the unique molecular identifiers (UMIs) by parsing R4 read.
 
-4. Filter sequence data with cellular barcodes matching less than 1000 reads (indicating poor quality cells due to encapsulation of free floating RNA from dying cells, small cells, or set of cells that failed for some reason). The threshold for the number of matching reads used for filtering can be specified in the `config` file with the `minimum_barcode_depth` parameter.
+4. Filter out the sequence data with cellular barcodes matching less than 1000 reads (indicating poor quality cells due to encapsulation of free floating RNA from dying cells, small cells, or set of cells that failed for some reason). The threshold for the number of matching reads used for filtering can be specified in the `config` file with the `minimum_barcode_depth` parameter.
 
 5. Align reads with Rapmap tool.
 
