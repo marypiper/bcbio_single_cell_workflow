@@ -6,6 +6,7 @@
 	- How many samples were sequenced?
 	- What were the sample indices used?
 	- How many cells were encapsulated and sequenced per sample?
+	- What is the main experimental question - does it require clustering using markers and/or cell trajectory analyses?
 
 2. Acquire data from sequencing core:
 
