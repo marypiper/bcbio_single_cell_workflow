@@ -10,7 +10,9 @@
 
 2. Acquire data from sequencing core:
 
-	- **Bauer sequencing core** uses Basespace and to download the sequencing files, follow the code below:
+	- **Bauer sequencing core:** 
+		
+		Uses Basespace and to download the sequencing files, follow the code below:
 
 		```
 		wget https://da1s119xsxmu0.cloudfront.net/sites/knowledgebase/API/08052014/Script/BaseSpaceRunDownloader_v2.zip
@@ -22,9 +24,15 @@
 		
 		The files output will be BCL files that require demultiplexing with the `bcl2fastq` tool (instructions below).
 
-	- **DFCI sequencing center (Zach)** will output the FASTQ files (already demultiplexed).
-	- **Biopolymers sequencing facility** will sometimes output BCL and sometimes FASTQ, so necessary to check the files
-	- **Broad Institute** has their own single cell distribution platform
+	- **DFCI sequencing center (Zach):** 
+	
+		Core will output the FASTQ files (already demultiplexed).
+		
+	- **Biopolymers sequencing facility:** 
+		Core will sometimes output BCL and sometimes FASTQ, so necessary to check the files - good idea to ask for the BCL files
+		
+	- **Broad Institute:** 
+		Core has their own single cell distribution platform
 
 3. If downloaded sequencing files are BCL format, then need to convert to FASTQ. To do this log on to Orchestra or O2 to run `bcl2fastq`. Currently the module is only available on Orchestra.
 
