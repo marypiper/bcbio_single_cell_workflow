@@ -29,9 +29,11 @@
 		Core will output the FASTQ files (already demultiplexed).
 		
 	- **Biopolymers sequencing facility:** 
+	
 		Core will sometimes output BCL and sometimes FASTQ, so necessary to check the files - good idea to ask for the BCL files
 		
 	- **Broad Institute:** 
+	
 		Core has their own single cell distribution platform
 
 3. If downloaded sequencing files are BCL format, then need to convert to FASTQ. To do this log on to Orchestra or O2 to run `bcl2fastq`. Currently the module is only available on Orchestra.
