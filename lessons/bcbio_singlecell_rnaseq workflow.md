@@ -166,3 +166,12 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 
 12. Use the information from the client to construct the metadata table to use with bcbioSingleCell R package according to the specifications detailed at [https://github.com/hbc/bcbioSingleCell](https://github.com/hbc/bcbioSingleCell).
 	- Note that the `Sequence` column for the inDrop metadata is the **Forward** sequence, not the same as the sequences present in the `sample_barcodes` file, which is the reverse complement.
+	
+13. Bring in data from bcbio similar to the following:
+	
+	```r
+	loadSingleCell("~/bcbio/PIs/path/to/final/", 
+               interestingGroups = "sampleName", 
+               sampleMetadataFile = "path/to/metadata", 
+               gtfFile = "~/bcbio/path/to/Homo_sapiens.GRCh38.90.chr_patch_hapl_scaff.gtf")
+	```
