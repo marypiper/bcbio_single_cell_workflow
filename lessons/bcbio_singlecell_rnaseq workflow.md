@@ -167,14 +167,66 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 12. Use the information from the client to construct the metadata table to use with bcbioSingleCell R package according to the specifications detailed at [https://github.com/hbc/bcbioSingleCell](https://github.com/hbc/bcbioSingleCell).
 	- Note that the `Sequence` column for the inDrop metadata is the **Forward** sequence, not the same as the sequences present in the `sample_barcodes` file, which is the reverse complement.
 
-### Quality control report - 
+### Quality control report
+
+#### Setting up
+
 13. Choose the quality control template.
 
+14. Install `bcbioSingleCell` and load the library:
+	
+	```r
+	# devtools::install_github("hbc/bcbioSingleCell", ref = "develop", dep = FALSE)
+	
+	library(bcbioSingleCell)
+	```
+	
 14. Bring in data from bcbio:
 	
 	```r
-	loadSingleCell("~/bcbio/PIs/path/to/final/", 
-               interestingGroups = "sampleName", 
-               sampleMetadataFile = "path/to/metadata", 
-               gtfFile = "~/bcbio/PIs/path/to/Homo_sapiens.GRCh38.90.chr_patch_hapl_scaff.gtf")
+	bcbio <- loadSingleCell("~/bcbio/PIs/path/to/final/",
+                        interestingGroups = "sampleName",
+                        sampleMetadataFile = "~/path/to/metadata", 
+                        gtfFile = "~/bcbio/PIs/path/to/Homo_sapiens.GRCh38.90.chr_patch_hapl_scaff.gtf")
+	
+	save(bcbio_output, file="data/bcb.rda")
 	```
+	
+	Reading in the GTF file can take a long time.
+
+15. Follow template:
+
+	```r
+	# Shared RMarkdown settings
+	prepareSingleCellTemplate()
+	if (file.exists("setup.R")) {
+	    source("setup.R")
+	}
+
+	# Directory paths
+	dataDir <- file.path(params$outputDir, "data")
+
+	# Load bcbioSingleCell object
+	bcbName <- load(params$bcbFile)
+	bcb <- get(bcbName, inherits = FALSE)
+	```
+	
+	```r
+	eval=file.exists("_header.Rmd")
+	```
+
+	```r
+	sampleMetadata(bcb)
+	```
+
+16. For the count alignment, be sure to update the linked Ensembl to be accurate for the organism.
+
+#### Quality Control Metrics
+
+##### Reads per cell
+
+17. The three plots give different ways of looking at the number of reads per cell. Generally you would like to see a large peak at around 10,000 reads per cell, and you hope your filtering threshold of 1,000 reads per cell used in bcbio has removed the poor quality cells with few number of reads. The filtering threshold of 1,000 is represented by the vertical dotted line.
+
+	For example, in the figures below, the yellow sample is worrisome because we see a small peak at 10,000 reads per cell, but a much larger peak at 1,000 reads per cell. The larger peak merges into the poor quality cells with few reads per cell.
+	
+	The proportional histogram looks a bit better, as you hope to see all of the samples with peaks in relatively the same location between 10,000 and 100,000 reads per cell. However, the yellow sample still has this shoulder, which is indicative of some worrisome cells.
