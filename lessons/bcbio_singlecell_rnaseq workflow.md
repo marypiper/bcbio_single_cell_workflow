@@ -110,13 +110,13 @@ The bcbio single cell RNA-Seq pipeline will perform the following steps:
 
 1. Identify the sample barcodes in the R3 read, which were provided in the `config` file with the `sample_barcodes` parameter. A single mismatch between known sample barcodes and sequences is allowed.
 
-2. Identify the cellular barcodes by parsing the R2 and R4 reads. The cellular barcodes are present in the hydrogels, which are encapsulated in the droplets with a single cell and lysis/reaction mixture. Upon treatment of UV and cell lysis, all components mix together inside the droplet and reverse transcription proceeds, followed by droplet breakup and linear amplification for library preparation. **While each hydrogel should have a single cellular barcode associated with it, occasionally a hydrogel can have more than one cellular barcode. We often see all possible combinations of cellular barcodes at a low level, leading to a higher number of cellular barcodes than cells.**
+2. Identify the cellular barcodes by parsing the R2 and R4 reads. 
 
 3. Identify the unique molecular identifiers (UMIs) by parsing R4 read.
 
 4. Filter out the sequence data with cellular barcodes matching less than 1000 reads (indicating poor quality cells due to encapsulation of free floating RNA from dying cells, small cells, or set of cells that failed for some reason). The threshold for the number of matching reads used for filtering can be specified in the `config` file with the `minimum_barcode_depth` parameter.
 
-5. Align reads with Rapmap tool.
+5. Align reads with [Rapmap](https://academic.oup.com/bioinformatics/article/32/12/i192/2288985/RapMap-a-rapid-sensitive-and-accurate-tool-for) tool.
 
 6. Take reads that mapped to more than one transcript and divide the count between all of the transcripts to which the reads aligned.
 
@@ -181,7 +181,7 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 	library(bcbioSingleCell)
 	```
 	
-14. Bring in data from bcbio:
+15. Bring in data from bcbio:
 	
 	```r
 	bcbio <- loadSingleCell("~/bcbio/PIs/path/to/final/",
@@ -194,7 +194,7 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 	
 	Reading in the GTF file can take a long time.
 
-15. Follow template - run entire `r setup` chunk by clicking on the green triangle at the top of the setup chunk (if you clear your environment, you need to run the chunk this way to make the `params` reappear.
+16. Follow template - run entire `r setup` chunk by clicking on the green triangle at the top of the setup chunk (if you clear your environment, you need to run the chunk this way to make the `params` reappear.
 
 	```r
 	# Shared RMarkdown settings
@@ -219,13 +219,13 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 	sampleMetadata(bcb)
 	```
 
-16. For the count alignment, be sure to update the linked Ensembl to be accurate for the organism.
+17. For the count alignment, be sure to update the linked Ensembl to be accurate for the organism.
 
 #### Quality Control Metrics
 
 ##### Reads per cell
 
-17. The three plots give different ways of looking at the number of reads per cell. Generally you would like to see a large peak at around 10,000 reads per cell, and you hope your filtering threshold of 1,000 reads per cell used in bcbio has removed the poor quality cells with few number of reads. The filtering threshold of 1,000 is represented by the vertical dotted line.
+18. The three plots give different ways of looking at the number of reads per cell. Generally you would like to see a large peak at around 10,000 reads per cell, and you hope your filtering threshold of 1,000 reads per cell used in bcbio has removed the poor quality cells with few number of reads. The filtering threshold of 1,000 is represented by the vertical dotted line.
 
 	For example, in the figures below, the yellow sample is worrisome because we see a small peak at 10,000 reads per cell, but a much larger peak at 1,000 reads per cell. The larger peak merges into the poor quality cells with few reads per cell.
 	
@@ -234,3 +234,23 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 	The proportional histogram looks a bit better, as you hope to see all of the samples with peaks in relatively the same location between 10,000 and 100,000 reads per cell. However, the yellow sample still has this shoulder, which is indicative of many poor quality cells.
 
 	<img src="../img/sc_qc_reads_histogram.png" width="500">
+	
+##### Cell counts
+
+The cell counts are determined by the number of unique cellular barcodes detected. During the inDrop protocol, the cellular barcodes are present in the hydrogels, which are encapsulated in the droplets with a single cell and lysis/reaction mixture. Upon treatment of UV and cell lysis, all components mix together inside the droplet and reverse transcription proceeds, followed by droplet breakup and linear amplification for library preparation. While each hydrogel should have a single cellular barcode associated with it, occasionally a hydrogel can have more than one cellular barcode. We often see all possible combinations of cellular barcodes at a low level, leading to a higher number of cellular barcodes than cells.
+
+You expect the number of unique cellular barcodes to be around the number of sequenced cells (determined in step 1) or greater due to some hydrogels having more than one cellular barcode. The yellow sample below seems to have at least double the number of cellular barcodes as the other samples.
+
+##### UMI counts per cell
+
+##### Genes detected per cell
+
+##### UMIs vs. genes detected
+
+##### Mitochondrial counts ratio
+
+##### Novelty
+
+##### Filter cells
+
+Expect roughly the number of sequenced cells per sample.
