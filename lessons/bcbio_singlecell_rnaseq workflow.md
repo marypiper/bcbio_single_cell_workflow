@@ -229,4 +229,8 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 
 	For example, in the figures below, the yellow sample is worrisome because we see a small peak at 10,000 reads per cell, but a much larger peak at 1,000 reads per cell. The larger peak merges into the poor quality cells with few reads per cell.
 	
+	<img src="../img/sc_qc_reads_ridgeline.png" width="800">
+	
 	The proportional histogram looks a bit better, as you hope to see all of the samples with peaks in relatively the same location between 10,000 and 100,000 reads per cell. However, the yellow sample still has this shoulder, which is indicative of some worrisome cells.
+
+	<img src="../img/sc_qc_reads_histogram.png" width="800">
