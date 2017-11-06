@@ -219,7 +219,27 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 	sampleMetadata(bcb)
 	```
 
-17. For the count alignment, be sure to update the linked Ensembl to be accurate for the organism.
+17. For the count alignment, be sure to update the linked Ensembl to be accurate for the organism. If you want to explore the data in the `bcb` object, the following functions can be helpful:
+	
+	```r
+	# Access metadata for each sample: "sampleID", "sampleName", "description", "fileName", "index", "sequence", "revcomp"
+	sampleMetadata(bcb)
+	
+	# Access metadata for each cell: "nCount", "nUMI", "nGene", "nCoding", "nMito", "log10GenesPerUMI", "mitoRatio" 
+	colData(bcb)
+	
+	# Access raw counts - each column represents a single cell
+	counts <- as.data.frame(as.matrix((assay(bcb))))
+	
+	# Can return cells associated with a particular sample by using metadata information about which sample corresponds to each barcode
+	unsort_counts <- counts[, str_detect(colnames(counts), "run1_ATTAGACG")] # Return only the counts for the `Unsorted` sample
+	
+	# Extract information associated with each gene including ensgene, symbol, description, biotype, broadClass:
+	rowData(bcb)
+	
+	# Return the genes that are used to determine mitochondrial contamination
+	subset(rowData(bcb), broadClass == "mito")
+	```
 
 #### Quality Control Metrics
 
@@ -251,7 +271,7 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 
 	The cell counts are determined by the number of unique cellular barcodes detected. During the inDrop protocol, the cellular barcodes are present in the hydrogels, which are encapsulated in the droplets with a single cell and lysis/reaction mixture. Upon treatment of UV and cell lysis, all components mix together inside the droplet and reverse transcription proceeds, followed by droplet breakup and linear amplification for library preparation. While each hydrogel should have a single cellular barcode associated with it, occasionally a hydrogel can have more than one cellular barcode. We often see all possible combinations of cellular barcodes at a low level, leading to a higher number of cellular barcodes than cells.
 
-You expect the number of unique cellular barcodes to be around the number of sequenced cells (determined in step 1) or greater due to some hydrogels having more than one cellular barcode. The yellow sample below seems to have at least double the number of cellular barcodes as the other samples.
+	You expect the number of unique cellular barcodes to be around the number of sequenced cells (determined in step 1) or greater due to some hydrogels having more than one cellular barcode. The yellow sample below seems to have at least double the number of cellular barcodes as the other samples.
 
 	<img src="../img/sc_qc_reads_histogram.png" width="500">
 
