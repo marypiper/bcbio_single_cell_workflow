@@ -192,7 +192,7 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 	save(bcbio_output, file="data/bcb.rda")
 	```
 	
-	Reading in the GTF file can take a long time.
+	> **NOTE:** Reading in the GTF file can take a long time.
 
 16. Follow template - run entire `r setup` chunk by clicking on the green triangle at the top of the setup chunk (if you clear your environment, you need to run the chunk this way to make the `params` reappear.
 
