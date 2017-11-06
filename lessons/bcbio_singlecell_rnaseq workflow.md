@@ -225,7 +225,13 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 
 ##### Reads per cell
 
-18. The three plots give different ways of looking at the number of reads per cell. Generally you would like to see a large peak at around 10,000 reads per cell, and you hope your filtering threshold of 1,000 reads per cell used in bcbio has removed the poor quality cells with few number of reads. The filtering threshold of 1,000 is represented by the vertical dotted line.
+18. Evaluate the number of reads per cell:
+
+	```r
+	plotReadsPerCell(bcb, filterCells = FALSE)
+	```
+	
+	The three plots give different ways of looking at the number of reads per cell. Generally you would like to see a large peak at around 10,000 reads per cell, and you hope your filtering threshold of 1,000 reads per cell used in bcbio has removed the poor quality cells with few number of reads. The filtering threshold of 1,000 is represented by the vertical dotted line.
 
 	For example, in the figures below, the yellow sample is worrisome because we see a small peak at 10,000 reads per cell, but a much larger peak at 1,000 reads per cell. The larger peak merges into the poor quality cells with few reads per cell.
 	
@@ -237,7 +243,13 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 	
 ##### Cell counts
 
-The cell counts are determined by the number of unique cellular barcodes detected. During the inDrop protocol, the cellular barcodes are present in the hydrogels, which are encapsulated in the droplets with a single cell and lysis/reaction mixture. Upon treatment of UV and cell lysis, all components mix together inside the droplet and reverse transcription proceeds, followed by droplet breakup and linear amplification for library preparation. While each hydrogel should have a single cellular barcode associated with it, occasionally a hydrogel can have more than one cellular barcode. We often see all possible combinations of cellular barcodes at a low level, leading to a higher number of cellular barcodes than cells.
+19. Determine the number of cells detected per sample:
+
+	```r
+	plotCellCounts(bcb, filterCells = FALSE)
+	```
+
+	The cell counts are determined by the number of unique cellular barcodes detected. During the inDrop protocol, the cellular barcodes are present in the hydrogels, which are encapsulated in the droplets with a single cell and lysis/reaction mixture. Upon treatment of UV and cell lysis, all components mix together inside the droplet and reverse transcription proceeds, followed by droplet breakup and linear amplification for library preparation. While each hydrogel should have a single cellular barcode associated with it, occasionally a hydrogel can have more than one cellular barcode. We often see all possible combinations of cellular barcodes at a low level, leading to a higher number of cellular barcodes than cells.
 
 You expect the number of unique cellular barcodes to be around the number of sequenced cells (determined in step 1) or greater due to some hydrogels having more than one cellular barcode. The yellow sample below seems to have at least double the number of cellular barcodes as the other samples.
 
@@ -245,14 +257,70 @@ You expect the number of unique cellular barcodes to be around the number of seq
 
 ##### UMI counts per cell
 
+20. Determine the number of UMI counts (transcripts) per cell:
+
+	```r
+	plotUMIsPerCell(
+    		bcb,
+    		filterCells = FALSE,
+	    	min = params$minUMIs)
+	```
+
+	<img src="../img/sc_qc_umisPerCell.png" width="500">
+	
 ##### Genes detected per cell
 
+21. Discover the number of genes detected per cell:
+
+	```r
+	plotGenesPerCell(
+	    bcb,
+	    filterCells = FALSE,
+	    min = params$minGenes,
+	    max = params$maxGenes)
+	```
+
+	<img src="../img/sc_qc_genesDetected.png" width="500">
+	
 ##### UMIs vs. genes detected
 
+22. Identify whether large number of poor quality cells present in any samples with low UMI/genes detected:
+
+	```r
+	plotUMIsVsGenes(bcb, filterCells = FALSE)
+	```
+
+	<img src="../img/sc_qc_UMIsVsGenesDetected.png" width="500">
+	
 ##### Mitochondrial counts ratio
 
+23. Identify whether there is a large amount of mitochondrial contamination from dead or dying cells:
+
+	```r
+	plotMitoRatio(
+	    bcb,
+	    filterCells = FALSE,
+	    max = params$maxMitoRatio)
+	```
+
+	<img src="../img/sc_qc_mitoRatio.png" width="500">
+	
 ##### Novelty
+
+24. Explore the novelty for contamination with low complexity cell types:
+
+	```r
+	plotNovelty(
+	    bcb,
+	    filterCells = FALSE,
+	    min = params$minNovelty)
+	```
+	
+	<img src="../img/sc_qc_novelty.png" width="500">
+	
 
 ##### Filter cells
 
-Expect roughly the number of sequenced cells per sample.
+Expect roughly the number of sequenced cells per sample. We found out from the client that they had sequenced 2000-3000 cells, so the final numbers were around our expectations. If the number of cells sequenced is vastly different than the number returned after filtering, then you may need to re-visit the threshold criteria used for filtering.
+
+	<img src="../img/sc_qc_filtered_cellcounts.png" width="500">
