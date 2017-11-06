@@ -231,7 +231,7 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 	
 	<img src="../img/sc_qc_reads_ridgeline.png" width="600">
 	
-	The proportional histogram looks a bit better, as you hope to see all of the samples with peaks in relatively the same location between 10,000 and 100,000 reads per cell. However, the yellow sample still has this shoulder, which is indicative of many poor quality cells.
+	The proportional histogram looks a bit better, as you hope to see all of the samples with peaks in relatively the same location between 10,000 and 100,000 reads per cell. However, the yellow sample still has this shoulder, which is indicative of many poor quality cells. If this were the only issue with the data, we may want to set the threshold to be more strict to ~10,000 reads per cell to get rid of the cells constituting the shoulder in the yellow sample.
 
 	<img src="../img/sc_qc_reads_histogram.png" width="500">
 	
