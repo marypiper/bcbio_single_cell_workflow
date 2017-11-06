@@ -319,8 +319,39 @@ You expect the number of unique cellular barcodes to be around the number of seq
 	<img src="../img/sc_qc_novelty.png" width="500">
 	
 
-##### Filter cells
+##### Filtered results
 
-Expect roughly the number of sequenced cells per sample. We found out from the client that they had sequenced 2000-3000 cells, so the final numbers were around our expectations. If the number of cells sequenced is vastly different than the number returned after filtering, then you may need to re-visit the threshold criteria used for filtering.
-
+25. One main plot to look at to determine the success of the filtering criteria is the number of cell counts. You should expect roughly the number of sequenced cells per sample. We found out from the client that they had sequenced 2000-3000 cells, so the final numbers were around our expectations. If the number of cells sequenced is vastly different than the number returned after filtering, then you may need to re-visit the threshold criteria used for filtering.
+	
+	**Cell counts**
+	
 	<img src="../img/sc_qc_filtered_cellcounts.png" width="500">
+	
+	In addition, it is a good idea to explore all of the quality plots for the filtered data. All plots should be much improved for the number of reads per cell, genes detected, UMIs per cell, mitochondrial ratio, and novelty. The plots below show the filtered plots from the example data. Since the `Unsorted` sample was a poor quality sample, the filter will remove nearly all of the cells for this sample. 
+	
+	** Reads per cell**
+	
+	<img src="../img/sc_qc_filtered_reads.png" width="500">
+	
+	**Genes detected**
+	
+	<img src="../img/sc_qc_filtered_genesDetected.png" width="500">
+	
+	**UMIs per cell**
+	
+	<img src="../img/sc_qc_filtered_umisPerCell.png" width="500">
+	
+	**UMIs versus genes detected**
+	
+	<img src="../img/sc_qc_filtered_UMIsVsGenesDetected.png" width="500">
+	
+	**Mitochondrial ratio**
+	
+	<img src="../img/sc_qc_filtered_mitoRatio.png" width="500">
+	
+	**Novelty**
+	
+	<img src="../img/sc_qc_filtered_novelty.png" width="500">
+	
+
+	
