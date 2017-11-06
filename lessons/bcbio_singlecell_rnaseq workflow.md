@@ -173,7 +173,9 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 
 13. Choose the quality control template.
 
-14. Install `bcbioSingleCell` and load the library:
+14. Edit the information in the files `_header.Rmd` and `_footer.Rmd` with experiment-specific information.
+
+15. Install `bcbioSingleCell` and load the library:
 	
 	```r
 	# devtools::install_github("hbc/bcbioSingleCell", ref = "develop", dep = FALSE)
@@ -181,7 +183,7 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 	library(bcbioSingleCell)
 	```
 	
-15. Bring in data from bcbio:
+16. Bring in data from bcbio:
 	
 	```r
 	bcbio <- loadSingleCell("~/bcbio/PIs/path/to/final/",
@@ -194,7 +196,7 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 	
 	> **NOTE:** Reading in the GTF file can take a long time.
 
-16. Follow template - run entire `r setup` chunk by clicking on the green triangle at the top of the setup chunk (if you clear your environment, you need to run the chunk this way to make the `params` reappear.
+17. Follow template - run entire `r setup` chunk by clicking on the green triangle at the top of the setup chunk (if you clear your environment, you need to run the chunk this way to make the `params` reappear.
 
 	```r
 	# Shared RMarkdown settings
@@ -219,9 +221,9 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 	sampleMetadata(bcb)
 	```
 
-17. For the count alignment, be sure to update the linked Ensembl to be accurate for the organism. 
+18. For the count alignment, be sure to update the **linked Ensembl** to be accurate for the organism. This information is present in the file: `_footer.Rmd`. 
 
-18. To explore the raw data stored inside the `bcb` object, the following functions can be helpful:
+19. To explore the raw data stored inside the `bcb` object, the following functions can be helpful:
 	
 	```r
 	# Access metadata for each sample: "sampleID", "sampleName", "description", "fileName", "index", "sequence", "revcomp"
@@ -247,7 +249,7 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 
 ##### Reads per cell
 
-19. Evaluate the number of reads per cell:
+20. Evaluate the number of reads per cell:
 
 	```r
 	plotReadsPerCell(bcb, filterCells = FALSE)
@@ -265,7 +267,7 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 	
 ##### Cell counts
 
-20. Determine the number of cells detected per sample:
+21. Determine the number of cells detected per sample:
 
 	```r
 	plotCellCounts(bcb, filterCells = FALSE)
@@ -279,7 +281,7 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 
 ##### UMI counts per cell
 
-21. Determine the number of UMI counts (transcripts) per cell:
+22. Determine the number of UMI counts (transcripts) per cell:
 
 	```r
 	plotUMIsPerCell(
@@ -292,7 +294,7 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 	
 ##### Genes detected per cell
 
-22. Discover the number of genes detected per cell:
+23. Discover the number of genes detected per cell:
 
 	```r
 	plotGenesPerCell(
@@ -306,7 +308,7 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 	
 ##### UMIs vs. genes detected
 
-23. Identify whether large number of poor quality cells present in any samples with low UMI/genes detected:
+24. Identify whether large number of poor quality cells present in any samples with low UMI/genes detected:
 
 	```r
 	plotUMIsVsGenes(bcb, filterCells = FALSE)
@@ -316,7 +318,7 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 	
 ##### Mitochondrial counts ratio
 
-24. Identify whether there is a large amount of mitochondrial contamination from dead or dying cells:
+25. Identify whether there is a large amount of mitochondrial contamination from dead or dying cells:
 
 	```r
 	plotMitoRatio(
@@ -329,7 +331,7 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 	
 ##### Novelty
 
-25. Explore the novelty for contamination with low complexity cell types:
+26. Explore the novelty for contamination with low complexity cell types:
 
 	```r
 	plotNovelty(
@@ -343,7 +345,7 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 
 ##### Filtered results
 
-26. One main plot to look at to determine the success of the filtering criteria is the number of cell counts. You should expect roughly the number of sequenced cells per sample. We found out from the client that they had sequenced 2000-3000 cells, so the final numbers were around our expectations. If the number of cells sequenced is vastly different than the number returned after filtering, then you may need to re-visit the threshold criteria used for filtering.
+27. One main plot to look at to determine the success of the filtering criteria is the number of cell counts. You should expect roughly the number of sequenced cells per sample. We found out from the client that they had sequenced 2000-3000 cells, so the final numbers were around our expectations. If the number of cells sequenced is vastly different than the number returned after filtering, then you may need to re-visit the threshold criteria used for filtering.
 	
 	**Cell counts**
 	
