@@ -263,7 +263,7 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 	
 	The proportional histogram looks a bit better, as you hope to see all of the samples with peaks in relatively the same location between 10,000 and 100,000 reads per cell. However, the yellow sample still has this shoulder, which is indicative of many poor quality cells. If this were the only issue with the data, we may want to set the threshold to be more strict to ~10,000 reads per cell to get rid of the cells constituting the shoulder in the yellow sample.
 
-	<img src="../img/sc_qc_cellcounts.png" width="500">
+	<img src="../img/sc_qc_reads_histogram.png" width="500">
 	
 ##### Cell counts
 
@@ -277,7 +277,7 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 
 	You expect the number of unique cellular barcodes to be around the number of sequenced cells (determined in step 1) or greater due to some hydrogels having more than one cellular barcode. The yellow sample below seems to have at least double the number of cellular barcodes as the other samples.
 
-	<img src="../img/sc_qc_reads_histogram.png" width="500">
+	<img src="../img/sc_qc_cellcounts.png" width="500">
 
 ##### UMI counts per cell
 
