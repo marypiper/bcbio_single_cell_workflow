@@ -1,4 +1,4 @@
-# bcbio_singlecell_rnaseq workflow
+# bcbio_singlecell_rnaseq workflow - bcbio and QC
 
 ## Setting up for bcbio single cell RNA-Seq analysis
 
