@@ -108,7 +108,7 @@
 
 The bcbio single cell RNA-Seq pipeline will perform the following steps:
 
-1. Identify the sample barcodes in the R3 read, which were provided in the `config` file with the `sample_barcodes` parameter. A single mismatch between known sample barcodes and sequences is allowed.
+1. Identify the sample barcodes in the R3 read, which will be provided in the `config` file in the `sample_barcodes` parameter. A single mismatch between known sample barcodes and sequences is allowed.
 
 2. Identify the cellular barcodes by parsing the R2 and R4 reads. 
 
