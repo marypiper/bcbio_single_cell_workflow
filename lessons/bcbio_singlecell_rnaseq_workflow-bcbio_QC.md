@@ -178,7 +178,7 @@ export PATH=/n/app/bcbio/tools/bin:$PATH
 15. Install `bcbioSingleCell` and load the library:
 	
 	```r
-	# devtools::install_github("hbc/bcbioSingleCell", ref = "develop", dep = FALSE)
+	# devtools::install_github("hbc/bcbioSingleCell", ref = "develop", dep = TRUE)
 	
 	library(bcbioSingleCell)
 	```
