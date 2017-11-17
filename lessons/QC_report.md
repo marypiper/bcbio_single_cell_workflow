@@ -181,7 +181,19 @@
 
 ##### Filtered results
 
-16. One main plot to look at to determine the success of the filtering criteria is the number of cell counts. You should expect roughly the number of sequenced cells per sample. We found out from the client that they had sequenced 2000-3000 cells, so the final numbers were around our expectations. If the number of cells sequenced is vastly different than the number returned after filtering, then you may need to re-visit the threshold criteria used for filtering.
+16. Run the filtering criteria and explore the plots again. The metrics should have improved greatly after removing low gene/UMI cells and high mitochondrial cells.
+
+	```r
+	bcbFiltered <- filterCells(bcb,
+	minUMIs = params$minUMIs,
+	minGenes = params$minGenes,
+	maxGenes = params$maxGenes,
+	maxMitoRatio = params$maxMitoRatio,
+	minNovelty = params$minNovelty,
+	minCellsPerGene = params$minCellsPerGene)
+	```
+
+	One main plot to look at to determine the success of the filtering criteria is the number of cell counts. You should expect roughly the number of sequenced cells per sample. We found out from the client that they had sequenced 2000-3000 cells, so the final numbers were around our expectations. If the number of cells sequenced is vastly different than the number returned after filtering, then you may need to re-visit the threshold criteria used for filtering.
 	
 	**Cell counts**
 	
@@ -212,3 +224,9 @@
 	**Novelty**
 	
 	<img src="../img/sc_qc_filtered_novelty.png" width="500">
+	
+17. When you are satisfied with the filtered results, save the filtered data.
+
+	```r
+	assignAndSaveData(name = "bcbFiltered", object = bcbFiltered, dir = dataDir)
+	```
