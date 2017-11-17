@@ -1,4 +1,4 @@
-# Bcbio Run
+# bcbio Run
 
 ## Setting up for bcbio single cell RNA-Seq analysis
 
