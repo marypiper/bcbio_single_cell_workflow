@@ -1,17 +1,17 @@
 # bcbioSingleCell QC Report
 
-12. Use the information from the client to construct the metadata table to use with bcbioSingleCell R package according to the specifications detailed at [https://github.com/hbc/bcbioSingleCell](https://github.com/hbc/bcbioSingleCell).
+1. Use the information from the client to construct the metadata table to use with bcbioSingleCell R package according to the specifications detailed at [https://github.com/hbc/bcbioSingleCell](https://github.com/hbc/bcbioSingleCell).
 	- **Important:** the `Sequence` column for the inDrop metadata is the **Forward** sequence, not the same as the sequences present in the `sample_barcodes` file, which is the reverse complement.
 
 ### Quality control report
 
 #### Setting up
 
-13. Choose the quality control template.
+2. Choose the quality control template.
 
-14. Edit the information in the files `_header.Rmd` and `_footer.Rmd` with experiment-specific information.
+3. Edit the information in the files `_header.Rmd` and `_footer.Rmd` with experiment-specific information.
 
-15. Install `bcbioSingleCell` and load the library:
+4. Install `bcbioSingleCell` and load the library:
 	
 	```r
 	# devtools::install_github("hbc/bcbioSingleCell" # Add argument `ref = "develop"` if need development branch
@@ -19,7 +19,7 @@
 	library(bcbioSingleCell)
 	```
 	
-16. Bring in data from bcbio:
+5. Bring in data from bcbio:
 	
 	```r
 	bcbio <- loadSingleCell("~/bcbio/PIs/path/to/final/",
@@ -32,7 +32,7 @@
 	
 	> **NOTE:** Reading in the GTF file can take a long time.
 
-17. Follow template - run entire `r setup` chunk by clicking on the green triangle at the top of the setup chunk (if you clear your environment, you need to run the chunk this way to make the `params` reappear.
+6. Follow template - run entire `r setup` chunk by clicking on the green triangle at the top of the setup chunk (if you clear your environment, you need to run the chunk this way to make the `params` reappear.
 
 	```r
 	# Shared RMarkdown settings
@@ -57,9 +57,9 @@
 	sampleMetadata(bcb)
 	```
 
-18. For the count alignment, be sure to update the **linked Ensembl** to be accurate for the organism. This information is present in the file: `_footer.Rmd`. 
+7. For the count alignment, be sure to update the **linked Ensembl** to be accurate for the organism. This information is present in the file: `_footer.Rmd`. 
 
-19. To explore the raw data stored inside the `bcb` object, the following functions can be helpful:
+8. To explore the raw data stored inside the `bcb` object, the following functions can be helpful:
 	
 	```r
 	# Access metadata for each sample: "sampleID", "sampleName", "description", "fileName", "index", "sequence", "revcomp"
@@ -85,7 +85,7 @@
 
 ##### Reads per cell
 
-20. Evaluate the number of reads per cell:
+9. Evaluate the number of reads per cell:
 
 	```r
 	plotReadsPerCell(bcb, filterCells = FALSE)
@@ -103,7 +103,7 @@
 	
 ##### Cell counts
 
-21. Determine the number of cells detected per sample:
+10. Determine the number of cells detected per sample:
 
 	```r
 	plotCellCounts(bcb, filterCells = FALSE)
@@ -117,7 +117,7 @@
 
 ##### UMI counts per cell
 
-22. Determine the number of UMI counts (transcripts) per cell:
+11. Determine the number of UMI counts (transcripts) per cell:
 
 	```r
 	plotUMIsPerCell(
@@ -130,7 +130,7 @@
 	
 ##### Genes detected per cell
 
-23. Discover the number of genes detected per cell:
+12. Discover the number of genes detected per cell:
 
 	```r
 	plotGenesPerCell(
@@ -144,7 +144,7 @@
 	
 ##### UMIs vs. genes detected
 
-24. Identify whether large number of poor quality cells present in any samples with low UMI/genes detected:
+13. Identify whether large number of poor quality cells present in any samples with low UMI/genes detected:
 
 	```r
 	plotUMIsVsGenes(bcb, filterCells = FALSE)
@@ -154,7 +154,7 @@
 	
 ##### Mitochondrial counts ratio
 
-25. Identify whether there is a large amount of mitochondrial contamination from dead or dying cells:
+14. Identify whether there is a large amount of mitochondrial contamination from dead or dying cells:
 
 	```r
 	plotMitoRatio(
@@ -167,7 +167,7 @@
 	
 ##### Novelty
 
-26. Explore the novelty for contamination with low complexity cell types:
+15. Explore the novelty for contamination with low complexity cell types:
 
 	```r
 	plotNovelty(
@@ -181,7 +181,7 @@
 
 ##### Filtered results
 
-27. One main plot to look at to determine the success of the filtering criteria is the number of cell counts. You should expect roughly the number of sequenced cells per sample. We found out from the client that they had sequenced 2000-3000 cells, so the final numbers were around our expectations. If the number of cells sequenced is vastly different than the number returned after filtering, then you may need to re-visit the threshold criteria used for filtering.
+16. One main plot to look at to determine the success of the filtering criteria is the number of cell counts. You should expect roughly the number of sequenced cells per sample. We found out from the client that they had sequenced 2000-3000 cells, so the final numbers were around our expectations. If the number of cells sequenced is vastly different than the number returned after filtering, then you may need to re-visit the threshold criteria used for filtering.
 	
 	**Cell counts**
 	
