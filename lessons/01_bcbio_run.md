@@ -48,7 +48,7 @@
 		
 		More information regarding the `bcl2fastq` command and directory structures for other sequencing machines can be found in the [documentation](../docs/bcl2fastq2_guide_15051736_v2.pdf). 
 		
-4. The output files should be in the `BaseCalls` directory. For each file of sequenced reads, there should be four associated FASTQ files (R1-R4). These 
+4. The output files should be in the `BaseCalls` directory. For each file of sequenced reads, there should be four associated FASTQ files (R1-R4).
 	
 	- **R1 (61 bp Read 1):** sequence of the read
 	- **R2 (8 bp Index Read 1 (i7)):** cellular barcode - which cell read originated from
