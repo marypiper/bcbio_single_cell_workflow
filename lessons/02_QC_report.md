@@ -19,6 +19,8 @@
 	library(bcbioSingleCell)
 	```
 	
+	Documentation for all functions available from the bcbioSingleCell package is given at [http://bioinformatics.sph.harvard.edu/bcbioSingleCell/reference/index.html](http://bioinformatics.sph.harvard.edu/bcbioSingleCell/reference/index.html)
+	
 5. Bring in data from bcbio:
 	
 	```r
