@@ -1,6 +1,6 @@
-# bcbioSingleCell QC Report
-
 Documentation for all functions available from the bcbioSingleCell package is available at [http://bioinformatics.sph.harvard.edu/bcbioSingleCell/reference/index.html](http://bioinformatics.sph.harvard.edu/bcbioSingleCell/reference/index.html)
+
+# bcbioSingleCell QC Report
 
 1. Use the information from the client to construct the metadata table to use with bcbioSingleCell R package according to the specifications detailed at [https://github.com/hbc/bcbioSingleCell](https://github.com/hbc/bcbioSingleCell).
 	- **Important:** the `Sequence` column for the inDrop metadata is the **Forward** sequence, not the same as the sequences present in the `sample_barcodes` file, which is the reverse complement.
