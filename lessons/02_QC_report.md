@@ -34,7 +34,8 @@
 	
 	> **NOTE:** Reading in the GTF file can take a long time.
 
-6. Choose the filtering parameters to use. You can start with these parameters, then after viewing the data, change to better values. Generally, you don't want minGenes/minUMIs to be any lower than 500.  You would hope for at least 1000 genes/UMIs detected per sample. After choosing parameters, run the entire `r setup` chunk by clicking on the green triangle at the top of the setup chunk (if you clear your environment, you need to run the chunk this way to make the `params` reappear.
+6. Choose the filtering parameters to use. You can start with these parameters, then after viewing the data, change to better values. Generally, you don't want `minGenes`/`minUMIs` to be any lower than 500.  You would hope for at least 1000 genes/UMIs detected per sample. After choosing parameters, run the entire `r setup` chunk by clicking on the green triangle at the top of the setup chunk (if you clear your environment, you need to run the chunk this way to make the `params` reappear.
+	
 	**Choosing parameters**
 	```r
 	params:
