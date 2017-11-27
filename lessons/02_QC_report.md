@@ -92,7 +92,7 @@
 	# Extract information associated with each gene including "ensgene", "symbol", "description", "biotype", "broadClass"
 	rowData(bcb)
 	
-	# Return the genes that are used to determine mitochondrial contamination
+	# Return the genes that are associated with a broad class (ex: mitochondrial contamination)
 	subset(rowData(bcb), broadClass == "mito")
 	```
 
