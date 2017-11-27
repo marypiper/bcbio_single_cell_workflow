@@ -12,7 +12,7 @@ params:
     seuratName: "seurat"
     pcCompute: 20
     pcUse: FALSE
-    varsToRegress: !r c("nUMI")
+    varsToRegress: !r c("nUMI", "mitoRatio", "S.Score", "G2M.Score")
     resolution: 0.8
     outputDir: "."
 ---
@@ -20,7 +20,7 @@ params:
 
 2. Run the setup chunk using the green arrow.
 
-3. Generate the `seurat` object using the filtered data (`bcb`)
+3. Generate the `seurat` object using the filtered data (`bcbFiltered.rda`)
 
 Prior to any clustering analysis, the raw counts need to be normalized using global-scaling normalization. Global-scaling normalization (1) normalizes the gene expression measurements for each cell by the total expression, (2) multiplies this by a scale factor (10,000 by default), and (3) log-transforms the result. Following normalization, the average expression and dispersion for each gene is calculated, which places these genes into bins, and then a z-score for dispersion within each bin is calculated. This helps control for the relationship between variability and average expression. Finally, the genes are scaled and centered.
 
@@ -40,7 +40,7 @@ seurat <- as(bcb, "seurat") %>%
         model.use = "linear")
 ```
 
-4. Ensure that the data in the seurat object is properly filtered (do not need to include this inside the clustering report). These violin plots should match up with the histograms and bar plots in the quality control report.
+4. Ensure that the data in the seurat object is properly filtered (do not need to include this inside the actual clustering report). These violin plots should match up with the histograms and bar plots in the quality control report.
 
 ```r
 features <- c("nUMI", "nGene", "mitoRatio")
@@ -54,7 +54,7 @@ sapply(seq_along(features), function(a) {
     invisible
 ```
 
-5. We can also explore the presence of cell markers of interest in all cells. We can see in the violin plots below that we have a subset of cells expressing the markers of interest, PAX7 and MYF5 genes.
+5. We can also explore the presence of cell markers of interest in all cells. We can see in the violin plots below that we have a subset of cells expressing the markers of interest (ex. PAX7 and MYF5 genes). This was a useful step in this experiment, since if these markers weren't expressed, then the experiment did not work and there would be no need to continue.
 
 ```{r qc_plots_markers, message=FALSE, warning=FALSE}
 VlnPlot(seurat,
@@ -77,7 +77,7 @@ First, we assign each cell a score, based on its expression of G2/M and S phase 
 
 In the following PCA plot, we are checking to see if the cells are grouping by cell cycle. If we don't see clear grouping of the cells into `G1`, `G2M`, and `S` clusters, then we don't need to regress out cell-cycle variation. 
 
-In the PCA plot below, we can see clear clusters by cell cycle on the PCA. Therefore, we will plan to regress out the cell cycle variation. 
+In the PCA plot below, we can see clear clusters by cell cycle on the PCA. Therefore, we will plan to regress out the cell cycle variation.
 
 ```r
 ccm <- metadata(bcbFiltered)$organism %>%
@@ -116,7 +116,7 @@ RunPCA(
 
 [Seurat][] regresses out variables of uninteresting variation individually against each gene, then rescales and centers the resulting residuals. We generally recommend minimizing the effects of variable read count depth (`nUMI`) and mitochondrial gene expression (`mitoRatio`). If the differences in mitochondrial gene expression represent a biological phenomenon that may help to distinguish cell clusters, then we advise not regressing it out. Cell-cycle regression is generally recommended but should be avoided for samples containing cells undergoing differentiation.
 
-In this report we will regress out the cell-cycle variation, so that we can examine clustering not due to cell cycle stage. However, we may not pick up different clusters of the Pax7+ cells at different stages of differentiation. We will explore the clustering without regressing out the cell cycle stages in a different report.
+In this report we will regress out the cell-cycle variation, so that we can examine clustering not due to cell cycle stage. However, we may not pick up different clusters of the Pax7+ cells at different stages of differentiation. We will explore the clustering without regressing out the cell cycle stages later.
 
 Now that regression has been applied, let's recheck to see if the cells are no longer clustering by cycle. We now see the phase clusters superimpose.
 
