@@ -17,6 +17,18 @@ params:
     outputDir: "."
 ---
 ```
+    I also include the experimental description with design in the `_header.Rmd` and the following to describe the workflow just below the `params` chunk:
+    
+    # Clustering analysis
+
+    For this clustering analysis, we will take the filtered cells output from the quality control analysis to identify cellular populations with similar transcriptional profiles. To identify these clusters the following steps need to be performed:
+
+    1. Normalization and transformation of the raw gene counts per cell
+    2. Identification of high variance genes
+    3. Regression of unwanted variation (mitochondrial content, number of genes per cell, cell cycle, etc.)
+    4. Identification of the primary sources of heterogeneity using PCA analysis and heatmaps
+    5. Clustering cells based on significant PCs (metagenes)
+    6. Evaluation of cell clusters and detection of known markers
 
 2. Run the setup chunk using the green arrow.
 
