@@ -16,7 +16,7 @@
 4. Install `bcbioSingleCell` and load the library:
 	
 	```r
-	# devtools::install_github("hbc/bcbioSingleCell" # Add argument `ref = "develop"` if need development branch
+	# devtools::install_github("hbc/bcbioSingleCell") # Add argument `ref = "develop"` if need development branch
 	
 	library(bcbioSingleCell)
 	```
