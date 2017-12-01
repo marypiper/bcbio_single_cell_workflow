@@ -1,6 +1,16 @@
 # Seurat clustering of cells
 
-1. We will perform clustering using the output from our QC analysis. To use the filtered data, fill in the `params` for `bcbFile` with the path to the filtered output data.
+# bcbioSingleCell Clustering Report
+
+*All **bcbioSingleCell functions** are available at: [http://bioinformatics.sph.harvard.edu/bcbioSingleCell/reference/index.html](http://bioinformatics.sph.harvard.edu/bcbioSingleCell/reference/index.html).*
+
+#### Setting up
+
+2. Choose the clustering template.
+
+3. Edit the information in the files `_header.Rmd` and `_footer.Rmd` with experiment-specific information.
+
+4. We will perform clustering using the output from our QC analysis. To use the filtered data, fill in the `params` for `bcbFile` with the path to the filtered output data.
 
 ```r
 title: "Seurat Clustering"
@@ -19,6 +29,66 @@ params:
 ```
     I also include the experimental description with design in the `_header.Rmd` and the following to describe the workflow just below the `params` chunk:
     
+4. Install `bcbioSingleCell` and load the library:
+	
+	```r
+	# devtools::install_github("hbc/bcbioSingleCell") # Add argument `ref = "develop"` if need development branch
+	
+	library(bcbioSingleCell)
+	```
+	
+5. Bring in data from bcbio:
+	
+	```r
+	bcbio <- loadSingleCell("~/bcbio/PIs/path/to/final/",
+                        interestingGroups = "sampleName",
+                        sampleMetadataFile = "~/path/to/metadata", 
+                        gtfFile = "~/bcbio/PIs/path/to/Homo_sapiens.GRCh38.90.chr_patch_hapl_scaff.gtf")
+	
+	save(bcbio_output, file="data/bcb.rda")
+	```
+	
+	> **NOTE:** Reading in the GTF file can take a long time.
+
+6. Choose the filtering parameters to use. You can start with these parameters, then after viewing the data, change to better values. Generally, you don't want `minGenes`/`minUMIs` to be any lower than 500.  You would hope for at least 1000 genes/UMIs detected per sample. After choosing parameters, run the entire `r setup` chunk by clicking on the green triangle at the top of the setup chunk (if you clear your environment, you need to run the chunk this way to make the `params` reappear.
+	
+	**Choosing parameters**
+	```r
+	params:
+	  bcbFile: "data/bcbRaw.rda"
+	  maxGenes: 6500
+	  maxMitoRatio: 0.1
+	  minCellsPerGene: 3
+	  minGenes: 500 
+	  minNovelty: 0.8
+	  minUMIs: 500
+	  outputDir: .
+  	```
+	**Running setup chunk**
+	```r
+	# Shared RMarkdown settings
+	prepareSingleCellTemplate()
+	if (file.exists("setup.R")) {
+	    source("setup.R")
+	}
+
+	# Directory paths
+	dataDir <- file.path(params$outputDir, "data")
+
+	# Load bcbioSingleCell object
+	bcbName <- load(params$bcbFile)
+	bcb <- get(bcbName, inherits = FALSE)
+	```
+	
+	```r
+	eval=file.exists("_header.Rmd")
+	```
+
+	```r
+	sampleMetadata(bcb)
+	```
+
+
     # Clustering analysis
 
     For this clustering analysis, we will take the filtered cells output from the quality control analysis to identify cellular populations with similar transcriptional profiles. To identify these clusters the following steps need to be performed:
