@@ -36,7 +36,6 @@
 
 3. At he beginning of the Clustering analysis report, I added a summary of the clustering analysis workflow just below the `params` chunk:
 	
-	```
 	**Clustering analysis on all samples**
 	
 	For this clustering analysis, we will take the filtered cells output from the quality control analysis to identify cellular populations with similar transcriptional profiles. To identify these clusters the following steps need to be performed:
@@ -47,7 +46,7 @@
 	4. Identification of the primary sources of heterogeneity using PCA analysis and heatmaps
 	5. Clustering cells based on significant PCs (metagenes)
 	6. Evaluation of cell clusters
-	```
+	
 2. Run the setup chunk using the green arrow - this code will load your filtered data file specified in the `bcbFile` param (`bcbFiltered.rda`) and will save it to the variable `bcb`.
 
 3. Generate the `seurat` object using the filtered data (`bcb`), then normalize and transform the raw gene counts per cell.
@@ -95,7 +94,7 @@ VlnPlot(seurat,
         do.return = TRUE)
 ```
 
-6. Plotting the high variance genes. The cutoff parameters in this function should be set based on evaluation of the plot for outliers 
+6. Plot the high variance genes. Look at this plot similar to how you examine the dispersion plot in DESeq2 - look for decreasing dispersion with increasing mean expression. Generally this plot should be find - shouldn't have a cloud of data/bullseye.
 
 ```r
 VariableGenePlot(seurat)
