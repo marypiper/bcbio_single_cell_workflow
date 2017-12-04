@@ -85,14 +85,16 @@ sapply(seq_along(features), function(a) {
 
 5. We can also explore the presence of cell markers of interest in all cells. 
 
-We can see in the violin plots below that we have a subset of cells expressing the markers of interest (ex. PAX7 and MYF5 genes). This was a useful step in this experiment, since if these markers weren't expressed, then the experiment did not work and there would be no need to continue.
+	We can see in the violin plots below that we have a subset of cells expressing the markers of interest (ex. PAX7 and MYF5 genes). This was a useful step in this experiment, since if these markers weren't expressed, then the experiment did not work and there would be no need to continue.
+	
+	```{r qc_plots_markers, message=FALSE, warning=FALSE}
+	VlnPlot(seurat,
+	        features.plot = c("PAX7", "MYF5),
+	        x.lab.rot = TRUE,
+	        do.return = TRUE)
+	```
 
-```{r qc_plots_markers, message=FALSE, warning=FALSE}
-VlnPlot(seurat,
-        features.plot = c("PAX7"),
-        x.lab.rot = TRUE,
-        do.return = TRUE)
-```
+	<img src="../img/sc_clus_violin_genes" width="600">
 
 6. Plot the high variance genes. Look at this plot similar to how you examine the dispersion plot in DESeq2 - look for decreasing dispersion with increasing mean expression. Generally this plot should be find - shouldn't have a cloud of data/bullseye.
 
