@@ -1,6 +1,3 @@
-# Seurat clustering of cells
-
-
 # bcbioSingleCell Clustering Report
 
 *All **bcbioSingleCell functions** are available at: [http://bioinformatics.sph.harvard.edu/bcbioSingleCell/reference/index.html](http://bioinformatics.sph.harvard.edu/bcbioSingleCell/reference/index.html).*
