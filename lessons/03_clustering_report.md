@@ -94,185 +94,214 @@
 	        do.return = TRUE)
 	```
 
-<img src="../img/sc_clus_violin_genes.png" width="600">
+	<img src="../img/sc_clus_violin_genes.png" width="600">
 
 6. Plot the high variance genes. Look at this plot similar to how you examine the dispersion plot in DESeq2 - look for decreasing dispersion with increasing mean expression. Generally this plot should be find - shouldn't have a cloud of data/bullseye.
 
 	```r
 	VariableGenePlot(seurat)
 	```
-
+	<img src="../img/sc_clus_variable_genes.png" width="600">
+	
 7. Regress out unwanted sources of variation
 
-The single-cell dataset contains "uninteresting" sources of variation in addition to interesting sources. This can include technical noise, batch effects, and/or uncontrolled biological variation (e.g. cell cycle). Regressing these signals out of the analysis can improve downstream dimensionality reduction and clustering [@Buettner2015-ur]. To mitigate the effect of these signals, [Seurat][] constructs linear models to predict gene expression based on user-defined variables. The scaled z-scored residuals of these models are used for dimensionality reduction and clustering.
+	The single-cell dataset contains "uninteresting" sources of variation in addition to interesting sources. This can include technical noise, batch effects, and/or uncontrolled biological variation (e.g. cell cycle). Regressing these signals out of the analysis can improve downstream dimensionality reduction and clustering [@Buettner2015-ur]. To mitigate the effect of these signals, [Seurat][] constructs linear models to predict gene expression based on user-defined variables. The scaled z-scored residuals of these models are used for dimensionality reduction and clustering.
 
-First, we assign each cell a score, based on its expression of G2/M and S phase markers. These marker sets should be anticorrelated in their expression levels, and cells expressing neither are likely not cycling and in G1 phase.
+	First, we assign each cell a score, based on its expression of G2/M and S phase markers. These marker sets should be anticorrelated in their expression levels, and cells expressing neither are likely not cycling and in G1 phase.
 
-In the following PCA plot, we are checking to see if the cells are grouping by cell cycle. If we don't see clear grouping of the cells into `G1`, `G2M`, and `S` clusters, then we don't need to regress out cell-cycle variation. 
+	In the following PCA plot, we are checking to see if the cells are grouping by cell cycle. If we don't see clear grouping of the cells into `G1`, `G2M`, and `S` clusters, then we don't need to regress out cell-cycle variation. 
 
-In the PCA plot below, we can see clear clusters by cell cycle on the PCA. Therefore, we will plan to regress out the cell cycle variation.
+	>***NOTE:** There are differences regarding which cells are in which phase of the cell cycle depending on whether the cells are analyzed as a single sample or analyzed with other samples. We still need to figure out why.*
 
-```r
-ccm <- metadata(bcbFiltered)$organism %>%
-    str_match("^([A-Z])[a-z]+ ([a-z]+)$") %>%
-    .[, 2:3] %>%
-    as.character() %>%
-    paste0(collapse = "") %>%
-    tolower() %>%
-    cellCycleMarkers[[.]]
-sGenes <- ccm %>%
-    dplyr::filter(phase == "S") %>%
-    pull("symbol")
-g2mGenes <- ccm %>%
-    dplyr::filter(phase == "G2/M") %>%
-    pull("symbol")
+	In the PCA plot below, we can see clear clusters by cell cycle on the PCA. Therefore, we will plan to regress out the cell cycle variation.
 
-seurat <- CellCycleScoring(
-    seurat,
-    g2m.genes = g2mGenes,
-    s.genes = sGenes)
-# Cell-cycle `Phase` column should now be added to `seurat@meta.data`
-seuratPreregress <- seurat
-assignAndSaveData(
-    name = "seurat_preregress",
-    object = seuratPreregress,
-    dir = dataDir)
+	```r
+	ccm <- metadata(bcbFiltered)$organism %>%
+	    str_match("^([A-Z])[a-z]+ ([a-z]+)$") %>%
+	    .[, 2:3] %>%
+	    as.character() %>%
+	    paste0(collapse = "") %>%
+	    tolower() %>%
+	    cellCycleMarkers[[.]]
+	sGenes <- ccm %>%
+	    dplyr::filter(phase == "S") %>%
+	    pull("symbol")
+	g2mGenes <- ccm %>%
+	    dplyr::filter(phase == "G2/M") %>%
+	    pull("symbol")
 
-RunPCA(
-    seuratPreregress,
-    pc.genes = c(sGenes, g2mGenes),
-    do.print = FALSE) %>%
-    plotPCA(interestingGroups = "phase", label = FALSE)
-```
+	seurat <- CellCycleScoring(
+	    seurat,
+	    g2m.genes = g2mGenes,
+	    s.genes = sGenes)
+	# Cell-cycle `Phase` column should now be added to `seurat@meta.data`
+	seuratPreregress <- seurat
+	assignAndSaveData(
+	    name = "seurat_preregress",
+	    object = seuratPreregress,
+	    dir = dataDir)
+
+	RunPCA(
+	    seuratPreregress,
+	    pc.genes = c(sGenes, g2mGenes),
+	    do.print = FALSE) %>%
+	    plotPCA(interestingGroups = "phase", label = FALSE)
+	```
+
+	<img src="../img/sc_clus_no_cellcycle_regress.png" width="600">
 
 8. Apply regression variables
 
-[Seurat][] regresses out variables of uninteresting variation individually against each gene, then rescales and centers the resulting residuals. We generally recommend minimizing the effects of variable read count depth (`nUMI`) and mitochondrial gene expression (`mitoRatio`). If the differences in mitochondrial gene expression represent a biological phenomenon that may help to distinguish cell clusters, then we advise not regressing it out. Cell-cycle regression is generally recommended but should be avoided for samples containing cells undergoing differentiation.
+	[Seurat][] regresses out variables of uninteresting variation individually against each gene, then rescales and centers the resulting residuals. We generally recommend minimizing the effects of variable read count depth (`nUMI`) and mitochondrial gene expression (`mitoRatio`). If the differences in mitochondrial gene expression represent a biological phenomenon that may help to distinguish cell clusters, then we advise not regressing it out. Cell-cycle regression is generally recommended but should be avoided for samples containing cells undergoing differentiation.
 
-In this report we will regress out the cell-cycle variation, so that we can examine clustering not due to cell cycle stage. However, we may not pick up different clusters of the Pax7+ cells at different stages of differentiation. We will explore the clustering without regressing out the cell cycle stages later.
+	In this report we will regress out the cell-cycle variation, so that we can examine clustering not due to cell cycle stage. However, we may not pick up different clusters of the Pax7+ cells at different stages of differentiation. We will explore the clustering without regressing out the cell cycle stages later.
 
-Now that regression has been applied, let's recheck to see if the cells are no longer clustering by cycle. We now see the phase clusters superimpose.
+	Now that regression has been applied, let's recheck to see if the cells are no longer clustering by cycle. We now see the phase clusters superimpose.
 
-```r
-seurat <- ScaleData(seurat, vars.to.regress = params$varsToRegress)
+	```r
+	seurat <- ScaleData(seurat, vars.to.regress = params$varsToRegress)
 
-RunPCA(
-    seurat,
-    pc.genes = c(sGenes, g2mGenes),
-    do.print = FALSE) %>%
-    plotPCA(interestingGroups = "phase", label = FALSE)
-```
-
+	RunPCA(
+	    seurat,
+	    pc.genes = c(sGenes, g2mGenes),
+	    do.print = FALSE) %>%
+	    plotPCA(interestingGroups = "phase", label = FALSE)
+	```
+	<img src="../img/sc_clus_yes_cellcycle_regress.png" width="600">
+	
 9. Linear dimensionality reduction
 
-Next, we perform principal component analysis (PCA) on the scaled data and score each gene in the dataset (including genes not included in the PCA) based on their correlation with the calculated components.
+	Next, we perform principal component analysis (PCA) on the scaled data and score each gene in the dataset (including genes not included in the PCA) based on their correlation with the calculated components.
 
-In particular, a heatmap of the PCs allows for easy exploration of the primary sources of heterogeneity in a dataset, and can be useful when trying to decide which PCs to include for further downstream analyses. Both cells and genes are ordered according to their PCA scores. Though clearly a supervised analysis, we find this to be a valuable tool for exploring correlated gene sets.
+	In particular, a heatmap of the PCs allows for easy exploration of the primary sources of heterogeneity in a dataset, and can be useful when trying to decide which PCs to include for further downstream analyses. Both cells and genes are ordered according to their PCA scores. Though clearly a supervised analysis, we find this to be a valuable tool for exploring correlated gene sets.
 
-```r
-seurat <- seurat %>%
-    RunPCA(do.print = FALSE) %>%
-    ProjectPCA(do.print = FALSE)
-    
-PCHeatmap(
-    seurat,
-    col.use = CustomPalette(
-        low = viridis(3)[[1]],
-        mid = viridis(3)[[2]],
-        high = viridis(3)[[3]]),
-    do.balanced = TRUE,
-    label.columns = FALSE,
-    pc.use = 1:params$pcCompute,
-    remove.key = TRUE)
-    
- VizPCA(
-    seurat,
-    pcs.use = 1:params$pcCompute,
-    do.balanced = TRUE,
-    nCol = 2)
-    
- PrintPCA(
-    seurat,
-    pcs.print = 1:params$pcCompute)
-```
+	```r
+	seurat <- seurat %>%
+	    RunPCA(do.print = FALSE) %>%
+	    ProjectPCA(do.print = FALSE)
+	```
+
+	The heatmap shows the expression of the top 15 genes that most contribute to the PCs (positively and negatively). 
+
+	```r
+	PCHeatmap(
+	    seurat,
+	    col.use = CustomPalette(
+		low = viridis(3)[[1]],
+		mid = viridis(3)[[2]],
+		high = viridis(3)[[3]]),
+	    do.balanced = TRUE,
+	    label.columns = FALSE,
+	    pc.use = 1:params$pcCompute,
+	    remove.key = TRUE)
+	 ```
+
+	<img src="../img/sc_clus_pc_heatmap.png" width="600">
+
+	The visualizations of the PCs show the scores for each of the top 15 +/- genes contributing to each PC.
+
+	```r
+	 VizPCA(
+	    seurat,
+	    pcs.use = 1:params$pcCompute,
+	    do.balanced = TRUE,
+	    nCol = 2)
+	```
+	
+	<img src="../img/sc_clus_viz_pca.png" width="600">
+
+	The printed list include the top 15 genes contributing positively / negatively the most to each PC.
+
+	```r
+	 PrintPCA(
+	    seurat,
+	    pcs.print = 1:params$pcCompute)
+	```
 
 
 10. Determine statistically significant principal components
 
-To overcome the extensive technical noise in any single gene for scRNA-seq data, [Seurat][] clusters cells based on their PCA scores, with each PC essentially representing a "metagene" that combines information across a correlated gene set. Determining how many PCs to include downstream is therefore an important step. To accomplish this, we plot the standard deviation of each PC as an elbow plot.
+	To overcome the extensive technical noise in any single gene for scRNA-seq data, [Seurat][] clusters cells based on their PCA scores, with each PC essentially representing a "metagene" that combines information across a correlated gene set. Determining how many PCs to include downstream is therefore an important step. To accomplish this, we plot the standard deviation of each PC as an elbow plot.
 
-The plots below show where we have defined the principal component cutoff used downstream for dimensionality reduction. This is calculated automatically as the larger value of:
+	The plots below show where we have defined the principal component cutoff used downstream for dimensionality reduction. This is calculated automatically as the larger value of:
 
-1. The point where the principal components only contribute 5% of standard deviation (bottom left).
-2. The point where the principal components cumulatively contribute 80% of the standard deviation (bottom right).
+	1. The point where the principal components only contribute 5% of standard deviation (bottom left).
+	2. The point where the principal components cumulatively contribute 80% of the standard deviation (bottom right).
 
-This methodology is also commonly used for PC covariate analysis on bulk RNA-seq samples.
+	This methodology is also commonly used for PC covariate analysis on bulk RNA-seq samples.
 
-```r
-pcUse <- params$pcUse
-if (!is.numeric(params$pcUse)) {
-    pcUse <- pcCutoff(seurat) %>%
-        seq(from = 1, to = .)
-}
-```
+	```r
+	pcUse <- params$pcUse
+	if (!is.numeric(params$pcUse)) {
+	    pcUse <- pcCutoff(seurat) %>%
+		seq(from = 1, to = .)
+	}
+	```
 
-Based on these plots, we will use `r length(pcUse)` principal components for dimensionality reduction calculations.
+ 	<img src="../img/sc_clus_sig_pcs.png" width="600">
+
+
+Based on these plots, we will use 10 principal components for dimensionality reduction calculations.
 
 11. Cluster the cells
 
-Seurat now includes an graph-based clustering approach. Importantly, the *distance metric* which drives the clustering analysis (based on previously identified PCs) remains the same. However, our approach to partioning the cellular distance matrix into clusters has dramatically improved. Our approach was heavily inspired by recent manuscripts which applied graph-based clustering approaches to scRNA-seq data [SNN-Cliq, Xu and Su, Bioinformatics, 2015] and CyTOF data [PhenoGraph, Levine et al., Cell, 2015]. Briefly, these methods embed cells in a graph structure - for example a K-nearest neighbor (KNN) graph, with edges drawn between cells with similar gene expression patterns, and then attempt to partition this graph into highly interconnected ‘quasi-cliques’ or ‘communities’. As in PhenoGraph, we first construct a KNN graph based on the euclidean distance in PCA space, and refine the edge weights between any two cells based on the shared overlap in their local neighborhoods (Jaccard distance). To cluster the cells, we apply modularity optimization techniques [SLM, Blondel et al., Journal of Statistical Mechanics], to iteratively group cells together, with the goal of optimizing the standard modularity function.
+	Seurat now includes an graph-based clustering approach. Importantly, the *distance metric* which drives the clustering analysis (based on previously identified PCs) remains the same. However, our approach to partioning the cellular distance matrix into clusters has dramatically improved. Our approach was heavily inspired by recent manuscripts which applied graph-based clustering approaches to scRNA-seq data [SNN-Cliq, Xu and Su, Bioinformatics, 2015] and CyTOF data [PhenoGraph, Levine et al., Cell, 2015]. Briefly, these methods embed cells in a graph structure - for example a K-nearest neighbor (KNN) graph, with edges drawn between cells with similar gene expression patterns, and then attempt to partition this graph into highly interconnected ‘quasi-cliques’ or ‘communities’. As in PhenoGraph, we first construct a KNN graph based on the euclidean distance in PCA space, and refine the edge weights between any two cells based on the shared overlap in their local neighborhoods (Jaccard distance). To cluster the cells, we apply modularity optimization techniques [SLM, Blondel et al., Journal of Statistical Mechanics], to iteratively group cells together, with the goal of optimizing the standard modularity function.
 
-```r
-seurat <- FindClusters(
-    seurat,
-    dims.use = pcUse,
-    force.recalc = TRUE,
-    print.output = TRUE,
-    resolution = params$resolution,
-    save.SNN = TRUE)
+	```r
+	seurat <- FindClusters(
+	    seurat,
+	    dims.use = pcUse,
+	    force.recalc = TRUE,
+	    print.output = TRUE,
+	    resolution = params$resolution,
+	    save.SNN = TRUE)
 
-# A summary of the parameters that were chosen for clustering are given below.
+	# A summary of the parameters that were chosen for clustering are given below.
 
-PrintFindClustersParams(seurat)
-```
+	PrintFindClustersParams(seurat)
+	```
 
 12. Run non-linear dimensional reduction (tSNE)
 
-[Seurat][] continues to use tSNE as a powerful tool to visualize and explore these datasets. While we no longer advise clustering directly on tSNE components, cells within the graph-based clusters determined above should co-localize on the tSNE plot. This is because the tSNE aims to place cells with similar local neighborhoods in high-dimensional space together in low-dimensional space. As input to the tSNE, we use the same PCs as input to the clustering analysis.
+	[Seurat][] continues to use tSNE as a powerful tool to visualize and explore these datasets. While we no longer advise clustering directly on tSNE components, cells within the graph-based clusters determined above should co-localize on the tSNE plot. This is because the tSNE aims to place cells with similar local neighborhoods in high-dimensional space together in low-dimensional space. As input to the tSNE, we use the same PCs as input to the clustering analysis.
 
-```r
-seurat <- RunTSNE(
-    seurat,
-    dims.use = pcUse,
-    do.fast = TRUE)
-assignAndSaveData(
-    name = "seuratTSNE",
-    object = seurat,
-    dir = dataDir)
-    
-PrintTSNEParams(seurat)
+	```r
+	seurat <- RunTSNE(
+	    seurat,
+	    dims.use = pcUse,
+	    do.fast = TRUE)
+	assignAndSaveData(
+	    name = "seuratTSNE",
+	    object = seurat,
+	    dir = dataDir)
 
-lapply(seq_along(groupBy), function(a) {
-    if (groupBy[[a]] == "ident") {
-        label <- TRUE
-    } else {
-        label <- FALSE
-    }
-    plotTSNE(
-        seurat,
-        interestingGroups = groupBy[[a]],
-        label = label) %>%
-        show()
-    plotPCA(
-        seurat,
-        interestingGroups = groupBy[[a]],
-        label = label) %>%
-        show()
-}) %>%
-    invisible()
-```
+	PrintTSNEParams(seurat)
 
-Note that tSNE is not PCA! The measurement of distance in a tSNE plot is difficult to interpret, and is most helpful for the relationships of close neighbors. To better infer separation distance between the putative clusters, let's reapply PCA.
+	lapply(seq_along(groupBy), function(a) {
+	    if (groupBy[[a]] == "ident") {
+		label <- TRUE
+	    } else {
+		label <- FALSE
+	    }
+	    plotTSNE(
+		seurat,
+		interestingGroups = groupBy[[a]],
+		label = label) %>%
+		show()
+	    plotPCA(
+		seurat,
+		interestingGroups = groupBy[[a]],
+		label = label) %>%
+		show()
+	}) %>%
+	    invisible()
+	```
+
+ 	<img src="../img/sc_clus_pca_group.png" width="600">
+	
+	<img src="../img/sc_clus_tsne_cyclemarkers.png" width="600">
+
+	Note that tSNE is not PCA! The measurement of distance in a tSNE plot is difficult to interpret, and is most helpful for the relationships of close neighbors. To better infer separation distance between the putative clusters, let's reapply PCA.
 
 13. Cluster quality control
 
