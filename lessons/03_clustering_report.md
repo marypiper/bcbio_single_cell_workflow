@@ -18,21 +18,21 @@
 
 3. We will perform clustering using the output from our QC analysis. To use the filtered data, fill in the `params` for `bcbFile` with the path to the filtered output data:
 
-```r
-title: "Seurat Clustering"
-author: "`r getOption('author')`"
-date: "`r Sys.Date()`"
-bibliography: bibliography.bib
-params:
-    bcbFile: "data/bcbFiltered.rda"
-    seuratName: "seurat"
-    pcCompute: 20
-    pcUse: FALSE
-    varsToRegress: !r c("nUMI", "mitoRatio", "S.Score", "G2M.Score")
-    resolution: 0.8
-    outputDir: "."
----
-```
+	```r
+	title: "Seurat Clustering"
+	author: "`r getOption('author')`"
+	date: "`r Sys.Date()`"
+	bibliography: bibliography.bib
+	params:
+	    bcbFile: "data/bcbFiltered.rda"
+	    seuratName: "seurat"
+	    pcCompute: 20
+	    pcUse: FALSE
+	    varsToRegress: !r c("nUMI", "mitoRatio", "S.Score", "G2M.Score")
+	    resolution: 0.8
+	    outputDir: "."
+	---
+	```
 
 3. At he beginning of the Clustering analysis report, I added a summary of the clustering analysis workflow just below the `params` chunk:
 	
