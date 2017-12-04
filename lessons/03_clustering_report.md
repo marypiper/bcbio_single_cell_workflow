@@ -4,11 +4,19 @@
 
 #### Setting up
 
-2. Choose the clustering template.
+1. Install `bcbioSingleCell` and load the library:
+	
+	```r
+	# devtools::install_github("hbc/bcbioSingleCell") # Add argument `ref = "develop"` if need development branch
+	
+	library(bcbioSingleCell)
+	```
+	
+2. Create new RMarkdown file and choose the clustering template.
 
-3. Edit the information in the files `_header.Rmd` and `_footer.Rmd` with experiment-specific information.
+3. Edit the information in the files `_header.Rmd` and `_footer.Rmd` with experiment-specific information (I also include the experimental description with design).
 
-4. We will perform clustering using the output from our QC analysis. To use the filtered data, fill in the `params` for `bcbFile` with the path to the filtered output data.
+3. We will perform clustering using the output from our QC analysis. To use the filtered data, fill in the `params` for `bcbFile` with the path to the filtered output data:
 
 ```r
 title: "Seurat Clustering"
@@ -25,84 +33,23 @@ params:
     outputDir: "."
 ---
 ```
-2. Update the `_header.Rmd` with experimental specific information (I also include the experimental description with design).
 
-3. At he begenning of the Clustering analysis report, I added a summary of the clustering analysis workflow just below the `params` chunk:
-    
-4. Install `bcbioSingleCell` and load the library:
+3. At he beginning of the Clustering analysis report, I added a summary of the clustering analysis workflow just below the `params` chunk:
 	
-	```r
-	# devtools::install_github("hbc/bcbioSingleCell") # Add argument `ref = "develop"` if need development branch
+	**Clustering analysis on all samples**
 	
-	library(bcbioSingleCell)
-	```
-	
-5. Bring in data from bcbio:
-	
-	```r
-	bcbio <- loadSingleCell("~/bcbio/PIs/path/to/final/",
-                        interestingGroups = "sampleName",
-                        sampleMetadataFile = "~/path/to/metadata", 
-                        gtfFile = "~/bcbio/PIs/path/to/Homo_sapiens.GRCh38.90.chr_patch_hapl_scaff.gtf")
-	
-	save(bcbio_output, file="data/bcb.rda")
-	```
-	
-	> **NOTE:** Reading in the GTF file can take a long time.
+	For this clustering analysis, we will take the filtered cells output from the quality control analysis to identify cellular populations with similar transcriptional profiles. To identify these clusters the following steps need to be performed:
 
-6. Choose the filtering parameters to use. You can start with these parameters, then after viewing the data, change to better values. Generally, you don't want `minGenes`/`minUMIs` to be any lower than 500.  You would hope for at least 1000 genes/UMIs detected per sample. After choosing parameters, run the entire `r setup` chunk by clicking on the green triangle at the top of the setup chunk (if you clear your environment, you need to run the chunk this way to make the `params` reappear.
-	
-	**Choosing parameters**
-	```r
-	params:
-	  bcbFile: "data/bcbRaw.rda"
-	  maxGenes: 6500
-	  maxMitoRatio: 0.1
-	  minCellsPerGene: 3
-	  minGenes: 500 
-	  minNovelty: 0.8
-	  minUMIs: 500
-	  outputDir: .
-  	```
-	**Running setup chunk**
-	```r
-	# Shared RMarkdown settings
-	prepareSingleCellTemplate()
-	if (file.exists("setup.R")) {
-	    source("setup.R")
-	}
+	1. Normalization and transformation of the raw gene counts per cell
+	2. Identification of high variance genes
+	3. Regression of unwanted variation (mitochondrial content, number of genes per cell, cell cycle, etc.)
+	4. Identification of the primary sources of heterogeneity using PCA analysis and heatmaps
+	5. Clustering cells based on significant PCs (metagenes)
+	6. Evaluation of cell clusters
 
-	# Directory paths
-	dataDir <- file.path(params$outputDir, "data")
+2. Run the setup chunk using the green arrow - this code will load your filtered data file specified in the `bcbFile` param (`bcbFiltered.rda`) and will save it to the variable `bcb`.
 
-	# Load bcbioSingleCell object
-	bcbName <- load(params$bcbFile)
-	bcb <- get(bcbName, inherits = FALSE)
-	```
-	
-	```r
-	eval=file.exists("_header.Rmd")
-	```
-
-	```r
-	sampleMetadata(bcb)
-	```
-
-
-    # Clustering analysis
-
-    For this clustering analysis, we will take the filtered cells output from the quality control analysis to identify cellular populations with similar transcriptional profiles. To identify these clusters the following steps need to be performed:
-
-    1. Normalization and transformation of the raw gene counts per cell
-    2. Identification of high variance genes
-    3. Regression of unwanted variation (mitochondrial content, number of genes per cell, cell cycle, etc.)
-    4. Identification of the primary sources of heterogeneity using PCA analysis and heatmaps
-    5. Clustering cells based on significant PCs (metagenes)
-    6. Evaluation of cell clusters and detection of known markers
-
-2. Run the setup chunk using the green arrow.
-
-3. Generate the `seurat` object using the filtered data (`bcbFiltered.rda`)
+3. Generate the `seurat` object using the filtered data (`bcb`), then normalize and transform the raw gene counts per cell.
 
 Prior to any clustering analysis, the raw counts need to be normalized using global-scaling normalization. Global-scaling normalization (1) normalizes the gene expression measurements for each cell by the total expression, (2) multiplies this by a scale factor (10,000 by default), and (3) log-transforms the result. Following normalization, the average expression and dispersion for each gene is calculated, which places these genes into bins, and then a z-score for dispersion within each bin is calculated. This helps control for the relationship between variability and average expression. Finally, the genes are scaled and centered.
 
@@ -136,16 +83,18 @@ sapply(seq_along(features), function(a) {
     invisible
 ```
 
-5. We can also explore the presence of cell markers of interest in all cells. We can see in the violin plots below that we have a subset of cells expressing the markers of interest (ex. PAX7 and MYF5 genes). This was a useful step in this experiment, since if these markers weren't expressed, then the experiment did not work and there would be no need to continue.
+5. We can also explore the presence of cell markers of interest in all cells. 
+
+We can see in the violin plots below that we have a subset of cells expressing the markers of interest (ex. PAX7 and MYF5 genes). This was a useful step in this experiment, since if these markers weren't expressed, then the experiment did not work and there would be no need to continue.
 
 ```{r qc_plots_markers, message=FALSE, warning=FALSE}
 VlnPlot(seurat,
-        features.plot = c("PAX7", "MYF5"),
+        features.plot = c("PAX7"),
         x.lab.rot = TRUE,
         do.return = TRUE)
 ```
 
-6. Discover the variable genes to use for PC analysis
+6. Plotting the high variance genes. The cutoff parameters in this function should be set based on evaluation of the plot for outliers 
 
 ```r
 VariableGenePlot(seurat)
