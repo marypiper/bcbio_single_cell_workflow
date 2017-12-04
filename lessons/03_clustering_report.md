@@ -94,7 +94,7 @@
 	        do.return = TRUE)
 	```
 
-	<img src="../img/sc_clus_violin_genes" width="600">
+<img src="../img/sc_clus_violin_genes" width="600">
 
 6. Plot the high variance genes. Look at this plot similar to how you examine the dispersion plot in DESeq2 - look for decreasing dispersion with increasing mean expression. Generally this plot should be find - shouldn't have a cloud of data/bullseye.
 
