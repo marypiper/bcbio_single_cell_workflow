@@ -51,37 +51,37 @@
 
 3. Generate the `seurat` object using the filtered data (`bcb`), then normalize and transform the raw gene counts per cell.
 
-Prior to any clustering analysis, the raw counts need to be normalized using global-scaling normalization. Global-scaling normalization (1) normalizes the gene expression measurements for each cell by the total expression, (2) multiplies this by a scale factor (10,000 by default), and (3) log-transforms the result. Following normalization, the average expression and dispersion for each gene is calculated, which places these genes into bins, and then a z-score for dispersion within each bin is calculated. This helps control for the relationship between variability and average expression. Finally, the genes are scaled and centered.
+	Prior to any clustering analysis, the raw counts need to be normalized using global-scaling normalization. Global-scaling normalization (1) normalizes the gene expression measurements for each cell by the total expression, (2) multiplies this by a scale factor (10,000 by default), and (3) log-transforms the result. Following normalization, the average expression and dispersion for each gene is calculated, which places these genes into bins, and then a z-score for dispersion within each bin is calculated. This helps control for the relationship between variability and average expression. Finally, the genes are scaled and centered.
 
-```r
-seurat <- as(bcb, "seurat") %>%
-    NormalizeData(
-        object = .,
-        normalization.method = "LogNormalize",
-        scale.factor = 10000) %>%
-    FindVariableGenes(
-        object = .,
-        mean.function = ExpMean,
-        dispersion.function = LogVMR,
-        do.plot = FALSE) %>%
-    ScaleData(
-        object = .,
-        model.use = "linear")
-```
+	```r
+	seurat <- as(bcb, "seurat") %>%
+	    NormalizeData(
+		object = .,
+		normalization.method = "LogNormalize",
+		scale.factor = 10000) %>%
+	    FindVariableGenes(
+		object = .,
+		mean.function = ExpMean,
+		dispersion.function = LogVMR,
+		do.plot = FALSE) %>%
+	    ScaleData(
+		object = .,
+		model.use = "linear")
+	```
 
 4. Ensure that the data in the seurat object is properly filtered (do not need to include this inside the actual clustering report). These violin plots should match up with the histograms and bar plots in the quality control report.
 
-```r
-features <- c("nUMI", "nGene", "mitoRatio")
-sapply(seq_along(features), function(a) {
-    VlnPlot(
-        seurat,
-        features.plot = features[[a]],
-        x.lab.rot = TRUE) %>%
-        show
-}) %>%
-    invisible
-```
+	```r
+	features <- c("nUMI", "nGene", "mitoRatio")
+	sapply(seq_along(features), function(a) {
+	    VlnPlot(
+		seurat,
+		features.plot = features[[a]],
+		x.lab.rot = TRUE) %>%
+		show
+	}) %>%
+	    invisible
+	```
 
 5. We can also explore the presence of cell markers of interest in all cells. 
 
@@ -98,9 +98,9 @@ sapply(seq_along(features), function(a) {
 
 6. Plot the high variance genes. Look at this plot similar to how you examine the dispersion plot in DESeq2 - look for decreasing dispersion with increasing mean expression. Generally this plot should be find - shouldn't have a cloud of data/bullseye.
 
-```r
-VariableGenePlot(seurat)
-```
+	```r
+	VariableGenePlot(seurat)
+	```
 
 7. Regress out unwanted sources of variation
 
