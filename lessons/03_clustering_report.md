@@ -1,6 +1,6 @@
 # Seurat clustering of cells
 
-1. We will perform clustering using the output from our QC analysis. To use the filtered data, fill in the `params` for `bcbFile` with the path to the filtered output data.
+1. We will perform clustering using the output from our QC analysis. To use the filtered data, fill in the `params` for `bcbFile` with the path to the filtered output data:
 
 ```r
 title: "Seurat Clustering"
@@ -17,7 +17,9 @@ params:
     outputDir: "."
 ---
 ```
-    I also include the experimental description with design in the `_header.Rmd` and the following to describe the workflow just below the `params` chunk:
+2. Update the `_header.Rmd` with experimental specific information (I also include the experimental description with design).
+
+3. At he begenning of the Clustering analysis report, I added a summary of the clustering analysis workflow just below the `params` chunk:
     
     # Clustering analysis
 
