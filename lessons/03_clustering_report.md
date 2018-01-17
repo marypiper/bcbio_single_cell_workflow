@@ -1,6 +1,8 @@
 # bcbioSingleCell Clustering Report
 
-*All **bcbioSingleCell functions** are available at: [http://bioinformatics.sph.harvard.edu/bcbioSingleCell/reference/index.html](http://bioinformatics.sph.harvard.edu/bcbioSingleCell/reference/index.html).*
+* All **bcbioSingleCell functions** are available at: [http://bioinformatics.sph.harvard.edu/bcbioSingleCell/reference/index.html](http://bioinformatics.sph.harvard.edu/bcbioSingleCell/reference/index.html).*
+
+* Much of the content is from the bcbioSingleCell template, but with additional explanations and hints.
 
 #### Setting up
 
@@ -109,11 +111,19 @@
 
 	First, we will explore cell cycle variation among the cells and see if the cells cluster by cell cycle in the PCA. As a reminder of the cell cycle phases:
 	
+	<img src="../img/cell_cycle.png" width="600">
 	
+	*Adapted from [Wikipedia](https://en.wikipedia.org/wiki/Cell_cycle) (Image License is [CC BY-SA 3.0](https://en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License))*
 	
-	We assign each cell a score based on its expression of G2/M and S phase markers (provided by Seurat, which were based off of the following studies: . These marker sets should be anticorrelated in their expression levels, and cells expressing neither are likely not cycling and in G1 phase.
+	- **G0:** Quiescence or resting phase. The cell is not actively dividing, which is common for cells that are fully differentiated. Some types of cells enter G0 for long periods of time (many neuronal cells), while other cell types never enter G0 by continuously dividing (epithelial cells).
+	- **G1:** Gap 1 phase represents the **beginning of interphase**. During G1 there is growth of the non-chromosomal components of the cells. From this phase, the cell may enter G0 or S phase.
+	- **S:** Synthesis phase for the replication of the chromosomes (also part of interphase).
+	- **G2:** Gap 2 phase represents the **end of interphase**, prior to entering the mitotic phase. During this phase th cell grows in preparation for mitosis and the spindle forms.
+	- **M:** M phase is the nuclear division of the cell (consisting of prophase, metaphase, anaphase and telophase).
+	
+	We assign each cell a score based on its expression of G2/M and S phase markers (provided by Seurat, which is descibed in [this publication](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4944528/). These marker sets should be anticorrelated in their expression levels, and cells expressing neither are likely not cycling (G0) or in G1 phase.
 
-	In the following PCA plot, we are checking to see if the cells are grouping by cell cycle. If we don't see clear grouping of the cells into `G1`, `G2M`, and `S` clusters, then we don't need to regress out cell-cycle variation. 
+	In the following PCA plot, we are checking to see if the cells are grouping by cell cycle. If we don't see clear grouping of the cells into `G1` (including G0), `G2M`, and `S` clusters, then we don't need to regress out cell-cycle variation. 
 
 	>***NOTE:** There are differences regarding which cells are in which phase of the cell cycle depending on whether the cells are analyzed as a single sample or analyzed with other samples. We still need to figure out why.*
 
@@ -225,7 +235,7 @@
 
 10. Determine statistically significant principal components
 
-	To overcome the extensive technical noise in any single gene for scRNA-seq data, [Seurat][] clusters cells based on their PCA scores, with each PC essentially representing a "metagene" that combines information across a correlated gene set. Determining how many PCs to include downstream is therefore an important step. To accomplish this, we plot the standard deviation of each PC as an elbow plot.
+	To overcome the extensive technical noise in any single gene for scRNA-seq data, Seurat clusters cells based on their PCA scores, with each PC essentially representing a "metagene" that combines information across a correlated gene set. Determining how many PCs to include downstream is therefore an important step. To accomplish this, we plot the standard deviation of each PC as an elbow plot.
 
 	The plots below show where we have defined the principal component cutoff used downstream for dimensionality reduction. This is calculated automatically as the larger value of:
 
@@ -245,11 +255,13 @@
  	<img src="../img/sc_clus_sig_pcs.png" width="600">
 
 
-Based on these plots, we will use 10 principal components for dimensionality reduction calculations.
+	Based on these plots, we will use 9 principal components for dimensionality reduction calculations.
 
 11. Cluster the cells
 
-	Seurat now includes an graph-based clustering approach. Importantly, the *distance metric* which drives the clustering analysis (based on previously identified PCs) remains the same. However, our approach to partioning the cellular distance matrix into clusters has dramatically improved. Our approach was heavily inspired by recent manuscripts which applied graph-based clustering approaches to scRNA-seq data [SNN-Cliq, Xu and Su, Bioinformatics, 2015] and CyTOF data [PhenoGraph, Levine et al., Cell, 2015]. Briefly, these methods embed cells in a graph structure - for example a K-nearest neighbor (KNN) graph, with edges drawn between cells with similar gene expression patterns, and then attempt to partition this graph into highly interconnected ‘quasi-cliques’ or ‘communities’. As in PhenoGraph, we first construct a KNN graph based on the euclidean distance in PCA space, and refine the edge weights between any two cells based on the shared overlap in their local neighborhoods (Jaccard distance). To cluster the cells, we apply modularity optimization techniques [SLM, Blondel et al., Journal of Statistical Mechanics], to iteratively group cells together, with the goal of optimizing the standard modularity function.
+	Seurat now includes an graph-based clustering approach. Importantly, the *distance metric* which drives the clustering analysis (based on previously identified PCs) remains the same. However, our approach to partioning the cellular distance matrix into clusters has dramatically improved. Our approach was heavily inspired by recent manuscripts which applied graph-based clustering approaches to scRNA-seq data [SNN-Cliq, Xu and Su, Bioinformatics, 2015] and CyTOF data [PhenoGraph, Levine et al., Cell, 2015]. 
+	
+	Briefly, these methods embed cells in a graph structure - for example a K-nearest neighbor (KNN) graph, with edges drawn between cells with similar gene expression patterns, and then attempt to partition this graph into highly interconnected ‘quasi-cliques’ or ‘communities’. As in PhenoGraph, we first construct a KNN graph based on the euclidean distance in PCA space, and refine the edge weights between any two cells based on the shared overlap in their local neighborhoods (Jaccard distance). To cluster the cells, we apply modularity optimization techniques [SLM, Blondel et al., Journal of Statistical Mechanics], to iteratively group cells together, with the goal of optimizing the standard modularity function.
 
 	```r
 	seurat <- FindClusters(
@@ -267,7 +279,7 @@ Based on these plots, we will use 10 principal components for dimensionality red
 
 12. Run non-linear dimensional reduction (tSNE)
 
-	[Seurat][] continues to use tSNE as a powerful tool to visualize and explore these datasets. While we no longer advise clustering directly on tSNE components, cells within the graph-based clusters determined above should co-localize on the tSNE plot. This is because the tSNE aims to place cells with similar local neighborhoods in high-dimensional space together in low-dimensional space. As input to the tSNE, we use the same PCs as input to the clustering analysis.
+	Seurat continues to use tSNE as a powerful tool to visualize and explore these datasets. While we no longer advise clustering directly on tSNE components, cells within the graph-based clusters determined above should co-localize on the tSNE plot. This is because the tSNE aims to place cells with similar local neighborhoods in high-dimensional space together in low-dimensional space. As input to the tSNE, we use the same PCs as input to the clustering analysis.
 
 	```r
 	seurat <- RunTSNE(
@@ -303,23 +315,29 @@ Based on these plots, we will use 10 principal components for dimensionality red
 
  	<img src="../img/sc_clus_pca_group.png" width="600">
 	
+	This PCA looks like there may be differentiation occuring, which is separating the clusters. Should not automatically assume that is the case though.
+	
 	<img src="../img/sc_clus_tsne_cyclemarkers.png" width="600">
 
-	Note that tSNE is not PCA! The measurement of distance in a tSNE plot is difficult to interpret, and is most helpful for the relationships of close neighbors. To better infer separation distance between the putative clusters, let's reapply PCA.
+	**Note that tSNE is not PCA! The measurement of distance in a tSNE plot is difficult to interpret. To better infer separation distance between the putative clusters, let's reapply PCA.**
 
 13. Cluster quality control
 
-Let's look at the variance in the number of UMI counts (`nUMI`), gene detection (`nGene`), and the percentage of mitochondrial gene expression (`mitoRatio`), to see if there are any obvious cluster artefacts. We can also assess cell cycle batch effects (`S.Score`, `G2M.Score`) and any principal component bias toward individual clusters.
+	Let's look at the variance in the number of UMI counts (`nUMI`), gene detection (`nGene`), and the percentage of mitochondrial gene expression (`mitoRatio`), to see if there are any obvious cluster artefacts. We can also assess cell cycle batch effects (`S.Score`, `G2M.Score`) and any principal component bias toward individual clusters.
 
-```r
-plotFeatures(
-    seurat,
-    features = c("nUMI", "nGene",
-                 "log10GenesPerUMI", "mitoRatio",
-                 "S.Score", "G2M.Score"))
-plotFeatures(
-    seurat,
-    features = paste0("PC", pcUse))
-```
+	```r
+	plotFeatures(
+	    seurat,
+	    features = c("nUMI", "nGene",
+	                 "log10GenesPerUMI", "mitoRatio",
+	                 "S.Score", "G2M.Score"))
+	plotFeatures(
+	    seurat,
+	    features = paste0("PC", pcUse))
+	```
 
-14. Based on your assumptions for the experiment, you may not expect so many clusters or you may expect more clusters. If you do not expect so many clusters, then it would be useful to reduce the resolution used for the clustering in the `FindClusters()` function (step 11). You can reduce this parameter all the way down to 0.1 if necessary. Similarly, if you expect more clusters, you can increase the resolution.
+14. Adjusting parameters
+
+	Based on your assumptions for the experiment, you may not expect so many clusters or you may expect more clusters. If you do not expect so many clusters, then it would be useful to reduce the resolution used for the clustering in the `FindClusters()` function (step 11) and re-do the rest of this analysis. You can reduce this parameter all the way down to 0.1 if necessary. Similarly, if you expect more clusters, you can increase the resolution.
+
+15. If you determine that your cells are differentiating, then better to perform analysis using the pseudotime tool from [Monocle](http://cole-trapnell-lab.github.io/monocle-release/).
