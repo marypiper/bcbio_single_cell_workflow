@@ -105,9 +105,13 @@
 	
 7. Regress out unwanted sources of variation
 
-	The single-cell dataset contains "uninteresting" sources of variation in addition to interesting sources. This can include technical noise, batch effects, and/or uncontrolled biological variation (e.g. cell cycle). Regressing these signals out of the analysis can improve downstream dimensionality reduction and clustering [@Buettner2015-ur]. To mitigate the effect of these signals, [Seurat][] constructs linear models to predict gene expression based on user-defined variables. The scaled z-scored residuals of these models are used for dimensionality reduction and clustering.
+	The single-cell dataset contains "uninteresting" sources of variation in addition to interesting sources. This can include technical noise, batch effects, and/or uncontrolled biological variation (e.g. cell cycle). Regressing these signals out of the analysis can improve downstream dimensionality reduction and clustering. To mitigate the effect of these signals, Seurat constructs linear models to predict gene expression based on user-defined variables. The scaled z-scored residuals of these models are used for dimensionality reduction and clustering.
 
-	First, we assign each cell a score, based on its expression of G2/M and S phase markers. These marker sets should be anticorrelated in their expression levels, and cells expressing neither are likely not cycling and in G1 phase.
+	First, we will explore cell cycle variation among the cells and see if the cells cluster by cell cycle in the PCA. As a reminder of the cell cycle phases:
+	
+	
+	
+	We assign each cell a score based on its expression of G2/M and S phase markers (provided by Seurat, which were based off of the following studies: . These marker sets should be anticorrelated in their expression levels, and cells expressing neither are likely not cycling and in G1 phase.
 
 	In the following PCA plot, we are checking to see if the cells are grouping by cell cycle. If we don't see clear grouping of the cells into `G1`, `G2M`, and `S` clusters, then we don't need to regress out cell-cycle variation. 
 
