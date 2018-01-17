@@ -318,6 +318,4 @@ plotFeatures(
     features = paste0("PC", pcUse))
 ```
 
-14. Conclusions
-
-Overall, we see relatively nice clusters. However, we see little overlap between the cell clusters in the hPSC cells and the PAX7+ sorted cells based on the minimal overlap between the sorted cells and the hPSC cells using PCA. I imagine this may not be surprising given that the hPSC cells have differentiated for 30 days and comprised of multiple cell types while the sorted cells are primarily satellite cells based on being sorted for the satellite cell marker PAX7. If you were expecting more overlap between the hPSC and sorted cells, then please let us know. If this is expected, then we will perform clustering on the hPSC cells and PAX7-sorted cells independently to better identify clusters since there is little overlap. We will also identify markers for the various gene clusters.
+14. Based on your assumptions for the experiment, you may not expect so many clusters or you may expect more clusters. If you do not expect so many clusters, then it would be useful to reduce the resolution used for the clustering in the `FindClusters()` function (step 11). You can reduce this parameter all the way down to 0.1 if necessary. Similarly, if you expect more clusters, you can increase the resolution.
