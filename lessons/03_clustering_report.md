@@ -1,6 +1,6 @@
 # bcbioSingleCell Clustering Report
 
-* All **bcbioSingleCell functions** are available at: [http://bioinformatics.sph.harvard.edu/bcbioSingleCell/reference/index.html](http://bioinformatics.sph.harvard.edu/bcbioSingleCell/reference/index.html).*
+* All **bcbioSingleCell functions** are available at: [http://bioinformatics.sph.harvard.edu/bcbioSingleCell/reference/index.html](http://bioinformatics.sph.harvard.edu/bcbioSingleCell/reference/index.html).
 
 * Much of the content is from the bcbioSingleCell template, but with additional explanations and hints.
 
@@ -96,7 +96,7 @@
 	        do.return = TRUE)
 	```
 
-	<img src="../img/sc_clus_violin_genes.png" width="600">
+<img src="../img/sc_clus_violin_genes.png" width="600">
 
 6. Plot the high variance genes. Look at this plot similar to how you examine the dispersion plot in DESeq2 - look for decreasing dispersion with increasing mean expression. Generally this plot should be fine - shouldn't have a cloud of data/bullseye.
 
