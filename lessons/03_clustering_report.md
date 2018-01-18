@@ -255,7 +255,7 @@
  	<img src="../img/sc_clus_sig_pcs.png" width="600">
 
 
-	Based on these plots, we will use 9 principal components for dimensionality reduction calculations.
+	Based on these plots, we will use 10 principal components for dimensionality reduction calculations.
 
 11. Cluster the cells
 
