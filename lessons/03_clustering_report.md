@@ -111,7 +111,7 @@
 
 	First, we will explore cell cycle variation among the cells and see if the cells cluster by cell cycle in the PCA. As a reminder of the cell cycle phases:
 	
-	<img src="../img/cell_cycle.png" width="600">
+	<img src="../img/cell_cycle.png" width="400">
 	
 	*Adapted from [Wikipedia](https://en.wikipedia.org/wiki/Cell_cycle) (Image License is [CC BY-SA 3.0](https://en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License))*
 	
