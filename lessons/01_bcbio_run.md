@@ -1,5 +1,7 @@
 # bcbio Run
 
+**Setting up docker with R packages for single cell consult:** https://hub.docker.com/r/lpantano/bcbiosinglecell/
+
 ## Setting up for bcbio single cell RNA-Seq analysis
 
 1. Ask client for the following:
