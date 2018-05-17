@@ -12,7 +12,7 @@
 
 2. Acquire data from sequencing core:
 
-	- **Bauer sequencing core:** uses Basespace and to download the sequencing files using [BaseMount](https://help.basespace.illumina.com/articles/descriptive/introduction-to-basemount/)
+	- **Bauer sequencing core:** uses Basespace. To download the sequencing files use [BaseMount](https://help.basespace.illumina.com/articles/descriptive/introduction-to-basemount/)
 
 		- The BaseSpaceRunDownloader tool previously used and shown below is deprecated:
 	
