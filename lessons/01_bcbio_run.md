@@ -12,15 +12,17 @@
 
 2. Acquire data from sequencing core:
 
-	- **Bauer sequencing core:** uses Basespace and to download the sequencing files, follow the code below:
+	- **Bauer sequencing core:** uses Basespace and to download the sequencing files using [BaseMount](https://help.basespace.illumina.com/articles/descriptive/introduction-to-basemount/)
 
-		```
-		wget https://da1s119xsxmu0.cloudfront.net/sites/knowledgebase/API/08052014/Script/BaseSpaceRunDownloader_v2.zip
-		unzip BaseSpaceRunDownloader_v2.zip
-		python BaseSpaceRunDownloader_v2.py -r <Run ID> -a <access token>
-		```
+		- The BaseSpaceRunDownloader tool previously used and shown below is deprecated:
+	
+			```
+			wget https://da1s119xsxmu0.cloudfront.net/sites/knowledgebase/API/08052014/Script/BaseSpaceRunDownloader_v2.zip
+			unzip BaseSpaceRunDownloader_v2.zip
+			python BaseSpaceRunDownloader_v2.py -r <Run ID> -a <access token>
+			```
 		
-		The option `-r` is the number in the basespace url and the [access token](https://developer.basespace.illumina.com/docs/content/documentation/authentication/obtaining-access-tokens) is something you have to get for your basespace account. 
+			The option `-r` is the number in the basespace url and the [access token](https://developer.basespace.illumina.com/docs/content/documentation/authentication/obtaining-access-tokens) is something you have to get for your basespace account. 
 		
 		The files output will be BCL files that require demultiplexing with the `bcl2fastq` tool (instructions below).
 
@@ -158,8 +160,6 @@ details:
 #SBATCH --mem=8000
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=piper@hsph.harvard.edu
-
-export PATH=/n/app/bcbio/tools/bin:$PATH
 
 /n/app/bcbio/dev/anaconda/bin/bcbio_nextgen.py ../config/PI_name.yaml -n 48 -t ipython -s slurm -q medium -r t=4-00:00
 ```
