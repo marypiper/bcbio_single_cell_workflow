@@ -96,9 +96,9 @@
 	```
 	# Most recent mouse FASTA from Ensembl FTP
 	wget ftp://ftp.ensembl.org/pub/current_fasta/mus_musculus/cdna/Mus_musculus.GRCm38.cdna.all.fa.gz
-	
+
 	# Most recent mouse GTF from Ensembl FTP
-	wget ftp://ftp.ensembl.org/pub/current_gtf/mus_musculus/Mus_musculus.GRCm38.90.chr_patch_hapl_scaff.gtf.gz
+	wget ftp://ftp.ensembl.org/pub/release-92/gtf/mus_musculus/Mus_musculus.GRCm38.92.gtf.gz
 	
 	# Perform the checksums
 	sum Mus_musculus.GRCm38.cdna.all.fa.gz
