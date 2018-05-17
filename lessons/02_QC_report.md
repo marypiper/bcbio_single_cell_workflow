@@ -40,7 +40,7 @@
 	```r
 	params:
 	  bcbFile: "data/bcbRaw.rda"
-	  maxGenes: 6500
+	  maxGenes: Inf
 	  maxMitoRatio: 0.1
 	  minCellsPerGene: 3
 	  minGenes: 500 
@@ -84,7 +84,7 @@
 	colData(bcb)
 	
 	# Access raw counts - each column represents a single cell
-	counts <- as.data.frame(as.matrix((assay(bcb))))
+	counts <- counts(bcb)
 	
 	# Can return cells from a particular sample by using metadata information about which sample corresponds to each barcode
 	unsort_counts <- counts[, str_detect(colnames(counts), "run1_ATTAGACG")] # Return only the counts for the `Unsorted` sample
@@ -103,7 +103,7 @@
 9. Evaluate the number of reads per cell:
 
 	```r
-	plotReadsPerCell(bcb, filterCells = FALSE)
+	plotReadsPerCell(bcb)
 	```
 	
 	The three plots give different ways of looking at the number of reads per cell. Generally you would like to see a large peak at around 10,000 reads per cell, and you hope your filtering threshold of 1,000 reads per cell used in bcbio has removed the poor quality cells with few number of reads. The filtering threshold of 1,000 is represented by the vertical dotted line.
@@ -121,7 +121,7 @@
 10. Determine the number of cells detected per sample:
 
 	```r
-	plotCellCounts(bcb, filterCells = FALSE)
+	plotCellCounts(bcb)
 	```
 
 	The cell counts are determined by the number of unique cellular barcodes detected. During the inDrop protocol, the cellular barcodes are present in the hydrogels, which are encapsulated in the droplets with a single cell and lysis/reaction mixture. Upon treatment of UV and cell lysis, all components mix together inside the droplet and reverse transcription proceeds, followed by droplet breakup and linear amplification for library preparation. While each hydrogel should have a single cellular barcode associated with it, occasionally a hydrogel can have more than one cellular barcode. We often see all possible combinations of cellular barcodes at a low level, leading to a higher number of cellular barcodes than cells.
@@ -137,7 +137,6 @@
 	```r
 	plotUMIsPerCell(
     		bcb,
-    		filterCells = FALSE,
 	    	min = params$minUMIs)
 	```
 
@@ -154,7 +153,6 @@
 	```r
 	plotGenesPerCell(
 	    bcb,
-	    filterCells = FALSE,
 	    min = params$minGenes,
 	    max = params$maxGenes)
 	```
@@ -170,7 +168,7 @@
 13. Identify whether large number of poor quality cells present in any samples with low UMI/genes detected:
 
 	```r
-	plotUMIsVsGenes(bcb, filterCells = FALSE)
+	plotUMIsVsGenes(bcb)
 	```
 
 	Poor quality cells are likely to have low genes and UMIs per cell. Therefore, a poor sample is likely to have cells in the lower left of the graph. Good cells should exhibit both higher number of genes per cell and higher numbers of UMIs. We also expect similar lines with similar slopes for all samples.
@@ -186,7 +184,6 @@
 	```r
 	plotMitoRatio(
 	    bcb,
-	    filterCells = FALSE,
 	    max = params$maxMitoRatio)
 	```
 	
@@ -203,7 +200,6 @@
 	```r
 	plotNovelty(
 	    bcb,
-	    filterCells = FALSE,
 	    min = params$minNovelty)
 	```
 	
