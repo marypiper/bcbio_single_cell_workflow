@@ -42,7 +42,7 @@
 		*Image acquired from [bcl2fastq documentation](../docs/bcl2fastq2_guide_15051736_v2.pdf).* 
 		
 		```
-		cd path/to/
+		cd path/to/YYMMDD_machinename_XXXX_FCexperimentname  # cd to the folder containing the Data folder
 		```
 		
 	- Load `bcl2fastq` module and convert files to FASTQ by using the following command:
