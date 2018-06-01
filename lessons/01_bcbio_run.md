@@ -94,6 +94,13 @@
 	```
 	cat Undetermined_S0_L001_R1_001.fastq.gz Undetermined_S0_L002_R1_001.fastq.gz Undetermined_S0_L003_R1_001.fastq.gz Undetermined_S0_L004_R1_001.fastq.gz > cat_R1.fastq.gz
 	```
+	
+	or 
+	
+	```
+	cat *R1*.fastq.gz > cat_R1.fastq.gz
+	```
+	
 	Do the same for the R2, R3, and R4 files.
 
 7. Create metadata file as normal for bcbio run.
