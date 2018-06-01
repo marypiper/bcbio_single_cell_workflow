@@ -122,11 +122,11 @@
 	
 	# Perform the checksums
 	sum Mus_musculus.GRCm38.cdna.all.fa.gz
-	sum Mus_musculus.GRCm38.90.chr_patch_hapl_scaff.gtf.gz
+	sum Mus_musculus.GRCm38.92.gtf.gz
 	
 	# Decompress FASTA and GTF to run in bcbio
 	gzip -d Mus_musculus.GRCm38.cdna.all.fa.gz
-	gzip -d Mus_musculus.GRCm38.90.chr_patch_hapl_scaff.gtf.gz
+	gzip -d Mus_musculus.GRCm38.92.gtf.gz
 	```
 ## Overview of bcbio single cell RNA-Seq workflow on O2
 
