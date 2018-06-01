@@ -146,7 +146,7 @@ The bcbio single cell RNA-Seq pipeline will perform the following steps:
 
 ## Running bcbio single cell RNA-Seq workflow on O2
 
-1. Create sample barcodes file to identify samples in bcbio. The sample barcodes supplied by the client are written as a single barcode per line in a file. No other text should be present in the file, for example:
+1. Create sample barcodes file to identify samples in bcbio. The sample barcodes supplied by the client are written as a single barcode per line in a file. No other text should be present in the file, for example the following is the contents of a barcode file for an experiment with four samples:
 
 	```
 	AGGCTTAG
