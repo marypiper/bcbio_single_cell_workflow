@@ -36,10 +36,10 @@
 	
 		```
 		Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,I5_Index_ID,index2,Sample_Project,Description
-FS_03272018_1555,FS_03272018_1555,,,,AAAAAAAA,,AAAAAAAA,FS_03272018_1555,
+		FS_03272018_1555,FS_03272018_1555,,,,AAAAAAAA,,AAAAAAAA,FS_03272018_1555,
 		```
 		
-	> **NOTE:** If the Samplesheet gives errors during demultiplexing, can copy and paste above samplesheet and just change the name of the libraries (`FS_########_####`). The sequences of the indices do not matter at this point in time because bcbio with perform the extraction into the different samples. We don't need this samplesheet for any steps downstream other than the bcl2fastq step.
+		> **NOTE:** If the Samplesheet gives errors during demultiplexing, can copy and paste above samplesheet and just change the name of the libraries (`FS_########_####`). The sequences of the indices do not matter at this point in time because bcbio with perform the extraction into the different samples. We don't need this samplesheet for any steps downstream other than the bcl2fastq step.
 
 3. If downloaded sequencing files are BCL format, then need to convert to FASTQ. To do this log on to Orchestra or O2 to run `bcl2fastq`.
 
