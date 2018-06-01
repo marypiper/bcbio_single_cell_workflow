@@ -146,7 +146,17 @@ The bcbio single cell RNA-Seq pipeline will perform the following steps:
 
 ## Running bcbio single cell RNA-Seq workflow on O2
 
-1. Create configuration template for single cell run:
+1. Create sample barcodes file to identify samples in bcbio. The sample barcodes supplied by the client are written as a single barcode per line in a file. No other text should be present in the file, for example:
+
+	```
+	AGGCTTAG
+	CGGAGAGA
+	TACTCCTT
+	ATTAGACG
+	```
+	
+
+2. Create configuration template for single cell run:
 
 ```
 details:
@@ -161,13 +171,13 @@ details:
     genome_build: mm10
 ```
 
-2. Normal bcbio configuration file creation:
+3. Normal bcbio configuration file creation:
 
 	```
 	bcbio_nextgen.py -w template ../config/scRNAseq_config_template.yaml ../meta/PI_name.csv ../hbcXXXXX/seq_dir/Data/Intensities/BaseCalls/cat*fastq.gz
 	```
 
-3. Create script (below) to run job on O2 and run with `sbatch ../../runJob-PI_name-scRNAseq.slurm`:
+4. Create script (below) to run job on O2 and run with `sbatch ../../runJob-PI_name-scRNAseq.slurm`:
 
 ```
 #!/bin/sh
