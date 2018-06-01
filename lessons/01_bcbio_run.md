@@ -104,7 +104,7 @@
 	```
 
 
-8. Download the most recent transcriptome FASTA and GTF (patched scaffold) files:
+8. Download the most recent transcriptome FASTA and GTF files:
 
 	```
 	# Most recent mouse FASTA from Ensembl FTP
