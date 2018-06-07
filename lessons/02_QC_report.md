@@ -1,5 +1,7 @@
 # bcbioSingleCell QC Report
 
+**Setting up docker with R packages for single cell consult:** https://hub.docker.com/r/lpantano/bcbiosinglecell/. For set-up of the Docker image see documenation at: https://github.com/hbc/knowledgebase/wiki/Single-Cell.
+
 1. Use the information from the client to construct the metadata table to use with bcbioSingleCell R package according to the specifications detailed at [https://github.com/hbc/bcbioSingleCell](https://github.com/hbc/bcbioSingleCell).
 	- **Important:** the `sequence` column for the inDrop metadata is the **Forward** sequence, not the same as the sequences present in the `sample_barcodes` file, which is the reverse complement. 
 
