@@ -161,8 +161,8 @@ The bcbio single cell RNA-Seq pipeline will perform the following steps:
 details:
   - analysis: scRNA-seq
     algorithm:
-      transcriptome_fasta: /n/data1/cores/bcbio/PIs/PI_name/meta/Mus_musculus.GRCm38.cdna.all.fa
-      transcriptome_gtf: /n/data1/cores/bcbio/PIs/PI_name/meta/Mus_musculus.GRCm38.90.chr_patch_hapl_scaff.gtf.gz
+      transcriptome_fasta: /n/data1/cores/bcbio/PIs/PI_name/ref_data/Mus_musculus.GRCm38.cdna.all.fa
+      transcriptome_gtf: /n/data1/cores/bcbio/PIs/PI_name/ref_data/Mus_musculus.GRCm38.92.gtf
       umi_type: harvard-indrop-v3
       minimum_barcode_depth: 1000
       cellular_barcode_correction: 1
