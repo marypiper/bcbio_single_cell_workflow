@@ -41,12 +41,12 @@ Sample_JP1_11a_1,JP1_11a_1,,,D701,ATTACTCG,D501,AGGCTATA,JP_06092018_1641,
 
 ```
 		
-	There are two things we need to check in this section of the CSV file:
-	
-	1. The columns `I7_Index` and `I5_index` are empty.
-	2. The barcode sequences that are in `index` and `index2` columns do not match sample barcodes. These can be changed to a dummy sequence like `AAAAAAAA` just to be safe.
+There are two things we need to check in this section of the CSV file:
+
+1. The columns `I7_Index` and `I5_index` are empty.
+2. The barcode sequences that are in `index` and `index2` columns do not match sample barcodes. These can be changed to a dummy sequence like `AAAAAAAA` just to be safe.
 		
-		> **NOTE:** If we do not make these changes, `bcl2fastq` will attempt to demultiplex the samples. We can make changes because we don't need this samplesheet for any steps downstream other than the `bcl2fastq` step.
+> **NOTE:** If we do not make these changes, `bcl2fastq` will attempt to demultiplex the samples. We can make changes because we don't need this samplesheet for any steps downstream other than the `bcl2fastq` step.
 
 3. If downloaded sequencing files are BCL format, then need to **convert to FASTQ**. To do this log on to O2 to run `bcl2fastq`.
 
