@@ -2,13 +2,13 @@
 
 ## Setting up for bcbio single cell RNA-Seq analysis
 
-1. Ask client for the following:
+1. **Ask client for the following:**
 	- How many samples were sequenced?
 	- What were the sample indices used?
 	- How many cells were encapsulated and sequenced per sample?
 	- What is the main experimental question - does it require clustering using markers and/or cell trajectory analyses?
 
-2. Acquire data from sequencing core:
+2. **Acquire data from sequencing core.** The way in which you handle/process your data will differ depending on the sequencing core that you obtain it from. The key thing to keep in mind is that the input to `bcbio` cannot be demultiplexed. **The data needs to remain multiplexed, but split into four FASTQ files** (R1-R4, as described in detail below).
 
 	- **Bauer sequencing core:** uses Basespace. To download the sequencing files use [BaseMount](https://help.basespace.illumina.com/articles/descriptive/introduction-to-basemount/)
 
@@ -24,22 +24,30 @@
 		
 		The files output will be BCL files that require demultiplexing with the `bcl2fastq` tool (instructions below).
 
-	- **DFCI sequencing center (Zach):** will output the FASTQ files (already demultiplexed).
+	- **DFCI sequencing center (Zach):** will output the FASTQ files in the correct format since the Core has provided a script to Zach.
 		
 	- **Biopolymers sequencing facility:** will sometimes output BCL and sometimes FASTQ, so necessary to check the files - good idea to ask for the BCL files
 		
 	- **Broad Institute:** has their own single cell distribution platform
 	
-	- **CCCB:** helpful to have them zip all directories into a single tarball containing the BCL files. Check the Samplesheet to ensure it is correct for analysis. Should look something like:
+	- **CCCB:** will generally provide tarballs that correspond to different runs. Sometimes they have run `bcl2fastq` on the data but you do not want to use this output. It is likely demultiplexed and cannot be used as input to `bcbio`. 
+	
+	In the run-level folder (decompress the tarball), you should see a `Samplesheet.csv` file. This is a standard file obtained from Illumina sequencing. In the file you will notice four sections (Header, Reads, Settings, Data). The `[Data]` section is what we are interested in. It should look something like:
 	
 		```
-		Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,I5_Index_ID,index2,Sample_Project,Description
-		FS_03272018_1555,FS_03272018_1555,,,,AAAAAAAA,,AAAAAAAA,FS_03272018_1555,
+		[Data],,,,,,,,,
+Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,I5_Index_ID,index2,Sample_Project,Description
+Sample_JP1_11a_1,JP1_11a_1,,,D701,ATTACTCG,D501,AGGCTATA,JP_06092018_1641,
 		```
 		
-		> **NOTE:** If the Samplesheet gives errors during demultiplexing, can copy and paste above samplesheet and just change the name of the libraries (`FS_########_####`). The sequences of the indices do not matter at this point in time because bcbio with perform the extraction into the different samples. We don't need this samplesheet for any steps downstream other than the bcl2fastq step.
+	There are two hings we need to check in this section of the CSV file:
+	
+	1. The columns `I7_Index` and `I5_index` are empty.
+	2. The barcode sequences that are in `index` and `index2` columns do not match sample barcodes. These can be changed to a dummy sequence like `AAAAAAAA` just to be safe.
+		
+		> **NOTE:** If we do not make these changes, `bcl2fastq` will attempt to demultiplex the samples. We can make changes because we don't need this samplesheet for any steps downstream other than the `bcl2fastq` step.
 
-3. If downloaded sequencing files are BCL format, then need to convert to FASTQ. To do this log on to Orchestra or O2 to run `bcl2fastq`.
+3. If downloaded sequencing files are BCL format, then need to **convert to FASTQ**. To do this log on to O2 to run `bcl2fastq`.
 
 	- Change directories to the sequencing folder downloaded from the facility. The folder should be arranged according to the image below for NextSeq or MiniSeq:
 	
