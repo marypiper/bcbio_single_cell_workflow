@@ -92,6 +92,8 @@ There are two things we need to check in this section of the CSV file:
 	gzip -cd filename_R3.fq.gz | head -40000 | awk 'NR % 4 == 2' | sort | uniq -c | awk 	'{ print $2 "," $1}' | sort -t"," -n --key=2 | tail -5
 	```
 	
+	> **NOTE:** For inDrop you can cross-reference these top baracodes with Mike's list [here](https://github.com/seqcloud/seqcloud/blob/master/workflows/bcbio/data/umis/harvard_indrop_v3_sample_barcodes.csv)
+	
 	>**NOTE:** `awk 'NR % 4 == 2'` gets every 4th line starting from the 2nd, which is a useful trick when you want to count up FASTQ file entries (Rory's code)
 
 	The reverse complement sequences of the sample indices given by the client should correspond to the most abundant indices in the file.
