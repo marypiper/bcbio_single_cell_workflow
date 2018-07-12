@@ -71,6 +71,7 @@ There are two things we need to check in this section of the CSV file:
 		```
 		
 		More information regarding the `bcl2fastq` command and directory structures for other sequencing machines can be found in the [documentation](../docs/bcl2fastq2_guide_15051736_v2.pdf). 
+		> **NOTE:** This can sometimes take awhile and is best run as a job submission script.
 		
 4. The output files should be in the `BaseCalls` directory. For each file of sequenced reads, there should be four associated FASTQ files (R1-R4) for the inDrops technology.
 	
@@ -155,7 +156,7 @@ The bcbio single cell RNA-Seq pipeline will perform the following steps:
 
 ## Running bcbio single cell RNA-Seq workflow on O2
 
-1. Create sample barcodes file (`.txt`) to identify samples in bcbio. The reverse-complement of the sample barcodes supplied by the client are written as a single barcode per line in a file. No other text should be present in the file, for example the following is the contents of a barcode file for an experiment with four samples:
+1. Create sample barcodes file (`.txt`) to identify samples in bcbio. The **reverse-complement of the sample barcodes supplied by the client** are written as a single barcode per line in a file. No other text should be present in the file, for example the following is the contents of a barcode file for an experiment with four samples:
 
 	```
 	AGGCTTAG
