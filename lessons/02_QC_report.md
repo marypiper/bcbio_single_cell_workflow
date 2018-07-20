@@ -60,7 +60,7 @@ The above code chunk can be run on O2 in one of two ways:
 
 ### Creating the metadata file <a name="metadata"></a>
 
-1. Use the information from the client to construct the metadata table to use with bcbioSingleCell R package according to the specifications detailed at [https://github.com/hbc/bcbioSingleCell](https://github.com/hbc/bcbioSingleCell). You will need the columns for `description`, `index`, `sequence`, and `sampleName`. You can add any additional metadata as desired.
+Use the information from the client to construct the metadata table to use with bcbioSingleCell R package according to the specifications detailed at [https://github.com/hbc/bcbioSingleCell](https://github.com/hbc/bcbioSingleCell). You will need the columns for `description`, `index`, `sequence`, and `sampleName`. You can add any additional metadata as desired.
 
 	- **Example metadata table:**
 	
@@ -72,13 +72,13 @@ The above code chunk can be run on O2 in one of two ways:
 
 #### Setting up
 
-2. Choose the quality control template.
+1. Choose the quality control template.
 
 	> Documentation for all functions available from the bcbioSingleCell package is available at [http://bioinformatics.sph.harvard.edu/bcbioSingleCell/reference/index.html](http://bioinformatics.sph.harvard.edu/bcbioSingleCell/reference/index.html)
 
-3. Edit the information in the files `_header.Rmd` and `_footer.Rmd` with experiment-specific information.
+2. Edit the information in the files `_header.Rmd` and `_footer.Rmd` with experiment-specific information.
 
-4. Install `bcbioSingleCell` and load the library:
+3. Install `bcbioSingleCell` and load the library:
 	
 	```r
 	# devtools::install_github("hbc/bcbioSingleCell") # Add argument `ref = "develop"` if need development branch
@@ -86,7 +86,7 @@ The above code chunk can be run on O2 in one of two ways:
 	library(bcbioSingleCell)
 	```
 	
-5. Bring in data from bcbio:
+4. Bring in data from bcbio:
 	
 	```r
 	bcbio <- loadSingleCell("~/bcbio/PIs/path/to/final/",
@@ -99,7 +99,7 @@ The above code chunk can be run on O2 in one of two ways:
 	
 	> **NOTE:** Reading in the GTF file can take a long time.
 
-6. Choose the filtering parameters to use. You can start with these parameters, then after viewing the data, change to better values. Generally, you don't want `minGenes`/`minUMIs` to be any lower than 500.  You would hope for at least 1000 genes/UMIs detected per sample. After choosing parameters, run the entire `r setup` chunk by clicking on the green triangle at the top of the setup chunk (if you clear your environment, you need to run the chunk this way to make the `params` reappear.
+5. Choose the filtering parameters to use. You can start with these parameters, then after viewing the data, change to better values. Generally, you don't want `minGenes`/`minUMIs` to be any lower than 500.  You would hope for at least 1000 genes/UMIs detected per sample. After choosing parameters, run the entire `r setup` chunk by clicking on the green triangle at the top of the setup chunk (if you clear your environment, you need to run the chunk this way to make the `params` reappear.
 	
 	**Choosing parameters**
 	```r
@@ -137,9 +137,9 @@ The above code chunk can be run on O2 in one of two ways:
 	sampleMetadata(bcb)
 	```
 
-7. For the count alignment, be sure to update the **linked Ensembl** to be accurate for the organism. This information is present in the file: `_footer.Rmd`. 
+6. For the count alignment, be sure to update the **linked Ensembl** to be accurate for the organism. This information is present in the file: `_footer.Rmd`. 
 
-8. To explore the raw data stored inside the `bcb` object, the following functions can be helpful:
+7. To explore the raw data stored inside the `bcb` object, the following functions can be helpful:
 	
 	```r
 	# Access metadata for each sample: "sampleID", "sampleName", "description", "fileName", "index", "sequence", "revcomp"
@@ -165,7 +165,7 @@ The above code chunk can be run on O2 in one of two ways:
 
 ##### Reads per cell
 
-9. Evaluate the number of reads per cell:
+8. Evaluate the number of reads per cell:
 
 	```r
 	plotReadsPerCell(bcb)
@@ -183,7 +183,7 @@ The above code chunk can be run on O2 in one of two ways:
 	
 ##### Cell counts
 
-10. Determine the number of cells detected per sample:
+9. Determine the number of cells detected per sample:
 
 	```r
 	plotCellCounts(bcb)
@@ -197,7 +197,7 @@ The above code chunk can be run on O2 in one of two ways:
 
 ##### UMI counts per cell
 
-11. Determine the number of UMI counts (transcripts) per cell:
+10. Determine the number of UMI counts (transcripts) per cell:
 
 	```r
 	plotUMIsPerCell(
@@ -213,7 +213,7 @@ The above code chunk can be run on O2 in one of two ways:
 	
 ##### Genes detected per cell
 
-12. Discover the number of genes detected per cell:
+11. Discover the number of genes detected per cell:
 
 	```r
 	plotGenesPerCell(
@@ -230,7 +230,7 @@ The above code chunk can be run on O2 in one of two ways:
 	
 ##### UMIs vs. genes detected
 
-13. Identify whether large number of poor quality cells present in any samples with low UMI/genes detected:
+12. Identify whether large number of poor quality cells present in any samples with low UMI/genes detected:
 
 	```r
 	plotUMIsVsGenes(bcb)
@@ -244,7 +244,7 @@ The above code chunk can be run on O2 in one of two ways:
 	
 ##### Mitochondrial counts ratio
 
-14. Identify whether there is a large amount of mitochondrial contamination from dead or dying cells:
+13. Identify whether there is a large amount of mitochondrial contamination from dead or dying cells:
 
 	```r
 	plotMitoRatio(
@@ -260,7 +260,7 @@ The above code chunk can be run on O2 in one of two ways:
 	
 ##### Novelty
 
-15. Explore the novelty for contamination with low complexity cell types:
+14. Explore the novelty for contamination with low complexity cell types:
 
 	```r
 	plotNovelty(
@@ -277,7 +277,7 @@ The above code chunk can be run on O2 in one of two ways:
 
 ##### Filtered results
 
-16. Run the filtering criteria and explore the plots again. The metrics should have improved greatly after removing low gene/UMI cells and high mitochondrial cells.
+15. Run the filtering criteria and explore the plots again. The metrics should have improved greatly after removing low gene/UMI cells and high mitochondrial cells.
 
 	```r
 	bcbFiltered <- filterCells(bcb,
@@ -333,7 +333,7 @@ The above code chunk can be run on O2 in one of two ways:
 	
 	<img src="../img/sc_qc_filtered_novelty.png" width="500">
 	
-17. When you are satisfied with the filtered results, save the filtered data. You may need to adjust the filtering criteria multiple times to optimize the filtering results prior to saving the report.
+16. When you are satisfied with the filtered results, save the filtered data. You may need to adjust the filtering criteria multiple times to optimize the filtering results prior to saving the report.
 
 	```r
 	assignAndSaveData(name = "bcbFiltered", object = bcbFiltered, dir = dataDir)
