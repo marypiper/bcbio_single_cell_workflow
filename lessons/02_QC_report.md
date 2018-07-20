@@ -1,8 +1,10 @@
 # bcbioSingleCell QC Report
 
-There are various approaches to running `bcbioSingleCell` to generate the QC report. The first part is getting all of the output from the `bcbio` final directory loaded in to create the `bcb` object. The next step is running through code which will compute metrics and generate figures for quality assessment. This second step is best done locally so you can run the code interactively and assess things as you run through the report code chunks. For approaches #1 and #2 listed below, you are doing everything locally. For #3 and #4 you are creating the `bcb` object on the cluster, and then moving it local to perform the report generation. 
+### Different approaches to running `bcbioSingleCell`
 
-1. **Using a [Docker image]**(https://hub.docker.com/r/lpantano/bcbiosinglecell/). If you choose this method, you can run the entire report from start to finish.
+There are various approaches to running `bcbioSingleCell` to generate the QC report. The first part is getting all of the output from the **`bcbio` final directory loaded in to create the `bcb` object**. The next step is running through code which will **compute metrics and generate figures for quality assessment**. This second step is best done locally so you can run the code interactively and assess things as you run through the report code chunks. For approaches #1 and #2 listed below, you are doing everything locally. For #3 and #4 you are creating the `bcb` object on the cluster, and then moving it local to perform the report generation. 
+
+1. **Using a [Docker image](https://hub.docker.com/r/lpantano/bcbiosinglecell/)**. If you choose this method, you can run the entire report from start to finish.
     - First, install Docker 
     - Pull the Docker image: `docker pull lpantano/bcbiosinglecell:r3.5-bsc0.1.5`
     - Set your memory RAM limit to 4G or more. This is done with the Docker main application (Preferences -> Advanced)
@@ -11,34 +13,37 @@ There are various approaches to running `bcbioSingleCell` to generate the QC rep
     - Run the Docker image: `docker run -d -p 8787:8787 -e ROOT=TRUE -v $(pwd):/home/rstudio lpantano/bcbiosinglecell`
     - From here you can start [Creating the metadata file section](#metadata), and continue working within the Docker container.   
     
-    >
+    ---
+    
     > **NOTE:** If you start a Docker container and realize you want to start a new one, you will want to kill this one and remove it using the commands below:
     > ```
     > docker ps # to see your containers listed by id
     > docker stop <container_id>
     > docker rm <container_id> ```
 
-2. Running it **locally on your laptop**. This will require you to install `bcbioSingleCell` and also mount O2. Note that if you have more 400K-500K cells this will max out of memory. Also, note you may have to deal with problems with various dependency packages as you update R. If you choose this method, skip down to [Creating the metadata file section](#metadata) and get started.
+2. Running it **locally on your laptop RStudio**. This will require you to install `bcbioSingleCell` and also mount O2. Note that if you have more 400K-500K cells this will max out of memory. Also, note you may have to deal with problems with various dependency packages as you update R. If you choose this method, skip down to [Creating the metadata file section](#metadata) and get started.
 
-3. Generate the `bcb` object on the O2 cluster. You are limited to using R 3.4.1 because that is what is available for conda and the modules, but `bcbioSingleCell` is backwards compatible to R 3.4.1. This can be done in one of two ways:
+3. **Generate the `bcb` object on the O2 cluster**. You are limited to using R 3.4.1 because that is what is available for conda and the modules, but `bcbioSingleCell` is backwards compatible to R 3.4.1. This can be done in one of two ways:
 
-	* Using a conda install of R 3.4.1 and pointing to a personal R library. For the conda recipe you can find more information [here](https://steinbaugh.com/r_bioconda). Keep note of the different versions when you create your environment (i.e. pandoc 1 is required for rmarkdown (version 2 is super buggy) and hdf5 1.10.1 is required for the latest version of Seurat, or it won’t compile)
-	* Using the R 3.4.1 module and pointing to the personal R library. This may require some troubleshooting with the HMSRC folks as it has been known to be problematic.
-	>
-	> #### Using a pre-existing shared R library on O2 (for single cell RNA-seq)
-	>  This library has been created for use with single cell RNA-seq analysis. It can be used not only for QC but also for clustering with Seurat. First, you will need to edit your `.Renviron` file to have the following inside:
-	> 
-	> ```
-	> vim ~/.Renviron
-        > R_LIBS_USER="/n/data1/cores/bcbio/R/library/3.4-bioc-release/library"
-	> R_MAX_NUM_DLLS=150```
-	> 
-	> Then start an interactive session with extra memory and x11:
-	> 
-	> `srun --pty -p interactive -t 0-12:00 --x11 --mem 128G /bin/bash`
-	> 
-	> After starting the interactive session, load the necessary R modules and start R:
-	> `module load gcc/6.2.0 R/3.4.1 hdf5/1.10.1`
+	a. Using a conda install of R 3.4.1 and pointing to a personal R library. For the conda recipe you can find more information [here](https://steinbaugh.com/r_bioconda). Keep note of the different versions when you create your environment (i.e. pandoc 1 is required for rmarkdown (version 2 is super buggy) and hdf5 1.10.1 is required for the latest version of Seurat, or it won’t compile)
+	b. Using the R 3.4.1 module and pointing to the personal R library. This may require some troubleshooting with the HMSRC folks as it has been known to be problematic.
+	
+		
+> #### Using a pre-existing shared R library on O2 (for single cell RNA-seq)
+>  This library has been created for use with single cell RNA-seq analysis. It can be used not only for QC but also for clustering with Seurat. First, you will need to edit your `.Renviron` file to have the following inside:
+> 
+> ```
+> R_LIBS_USER="/n/data1/cores/bcbio/R/library/3.4-bioc-release/library"
+> R_MAX_NUM_DLLS=150
+> ```
+> 
+> Then start an interactive session with extra memory and x11:
+> 
+> `$ srun --pty -p interactive -t 0-12:00 --x11 --mem 128G /bin/bash`
+> 
+> After starting the interactive session, load the necessary R modules and start R:
+> 
+> `$ module load gcc/6.2.0 R/3.4.1 hdf5/1.10.1`
 
 
 ### Creating the metadata file <a name="metadata"></a>
