@@ -36,9 +36,9 @@ There are various approaches to running `bcbioSingleCell` to generate the QC rep
 
 The above code chunk can be run on O2 in one of two ways:
 
-   - **A.** Using a **conda install of R 3.4.1** and pointing to a [personal R library](#rlib). For the conda recipe you can find more information [here](https://steinbaugh.com/r_bioconda). Keep note of the different versions when you create your environment (i.e. pandoc 1 is required for rmarkdown (version 2 is super buggy) and hdf5 1.10.1 is required for the latest version of Seurat, or it won’t compile)
+   - **A.** Using a **conda install of R 3.4.1** and pointing to a [shared R library](#rlib). For the conda recipe you can find more information [here](https://steinbaugh.com/r_bioconda). Keep note of the different versions when you create your environment (i.e. pandoc 1 is required for rmarkdown (version 2 is super buggy) and hdf5 1.10.1 is required for the latest version of Seurat, or it won’t compile)
 	
-   - **B.** Using the **R 3.4.1 module** and pointing to the [personal R library](#rlib). This may require some troubleshooting with the HMSRC folks as it has been known to be problematic.
+   - **B.** Using the **R 3.4.1 module** and pointing to the [shared R library](#rlib). This may require some troubleshooting with the HMSRC folks as it has been known to be problematic.
 	
 		
 > #### Using a pre-existing shared R library on O2 (for single cell RNA-seq) <a name="rlib"></a>
