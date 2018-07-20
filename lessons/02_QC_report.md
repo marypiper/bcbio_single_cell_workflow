@@ -11,7 +11,7 @@ There are various approaches to running `bcbioSingleCell` to generate the QC rep
     - Mount the O2 `final` directory from your `bcbio` run on your laptop
     - Open up a terminal and make sure you are in your home directory (or a place where you can easily navigate to the mount space)
     - Run the Docker image: `docker run -d -p 8787:8787 -e ROOT=TRUE -v $(pwd):/home/rstudio lpantano/bcbiosinglecell`
-    - In a browser connect to RStudio: localhost:8787 with user and password: rstudio/rstudio. From here you can start [Creating the metadata file section](#metadata), and continue working within the Docker container to create the QC report.   
+    - In a browser connect to RStudio: localhost:8787 with user and password: rstudio/rstudio. From here you can start [Creating the metadata file](#metadata), and continue working within the Docker container to create the QC report.   
     
     ---
     
