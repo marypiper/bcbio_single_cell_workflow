@@ -1,6 +1,36 @@
 # bcbioSingleCell QC Report
 
+### Creating the `bcb` object 
+
+There are various ways to run `bcbioSingleCell` to generate the QC report:
+
+1. Using a [Docker image](https://hub.docker.com/r/lpantano/bcbiosinglecell/). If you choose this method, you can run the entire report from start to finish.
+    - First, install Docker 
+    - Pull the Docker image: `docker pull lpantano/bcbiosinglecell:r3.5-bsc0.1.5`
+    - Set your memory RAM limit to 4G or more. This is done with the Docker main application (Preferences -> Advanced)
+    - Mount the O2 `final` directory from your `bcbio` run on your laptop
+    - Open up a terminal and make sure you are in your home directory (or a place where you can easily navigate to the mount space)
+    - Run the Docker image: `docker run -d -p 8787:8787 -e ROOT=TRUE -v $(pwd):/home/rstudio lpantano/bcbiosinglecell`
+    - From here you can start [Creating the metadata file section](#metadata), and continue working within the Docker container.
+    
+    
+    > **NOTE:** If you start a Docker container and realize you want to start a new one, you will want to kill this one and remove it using the commands below:
+    >
+    > ```
+    > docker ps # to see your containers listed by id
+    > docker stop <container_id>
+    > docker rm <container_id> ```
+
+2. On the O2 cluster. This can be done in one of two ways:
+	* Using a conda install of R 3.4.1 and pointing to a personal R library
+	* Using the R 3.4.1 module and pointing to the personal R library
+
+ere, we describe different ways in getting started. The first thing you will need to do is load in the data from the `bcbio` run. Since this is on the cluster 
+
 **Setting up docker with R packages for single cell consult:** https://hub.docker.com/r/lpantano/bcbiosinglecell/. For set-up of the Docker image see documenation at: https://github.com/hbc/knowledgebase/wiki/Single-Cell.
+
+
+### Creating the metadata file <a name="metadata"></a>
 
 1. Use the information from the client to construct the metadata table to use with bcbioSingleCell R package according to the specifications detailed at [https://github.com/hbc/bcbioSingleCell](https://github.com/hbc/bcbioSingleCell). You will need the columns for `description`, `index`, `sequence`, and `sampleName`. You can add any additional metadata as desired.
 
@@ -10,7 +40,7 @@
 	
 	- **Important:** the `sequence` column for the inDrop metadata is the **Forward** sequence, not the same as the sequences present in the `sample_barcodes` file, which is the reverse complement. 
 
-### Quality control report
+### Quality control report <a name="qc"></a>
 
 #### Setting up
 
