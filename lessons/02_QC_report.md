@@ -4,14 +4,14 @@
 
 There are various approaches to running `bcbioSingleCell` to generate the QC report. The first part is getting all of the output from the **`bcbio` final directory loaded in to create the `bcb` object**. The next step is running through code which will **compute metrics and generate figures for quality assessment**. This second step is best done locally so you can run the code interactively and assess things as you run through the report code chunks. For approaches #1 and #2 listed below, you are doing everything locally. For #3 and #4 you are creating the `bcb` object on the cluster, and then moving it local to create the report. 
 
-1. **Using a [Docker image](https://hub.docker.com/r/lpantano/bcbiosinglecell/)**. If you choose this method, you can run the entire report from start to finish.
+1. **Using a [Docker image](https://hub.docker.com/r/lpantano/bcbiosinglecell/)**. 
     - First, install Docker 
     - Pull the Docker image: `docker pull lpantano/bcbiosinglecell:r3.5-bsc0.1.5`
     - Set your memory RAM limit to 4G or more. This is done with the Docker main application (Preferences -> Advanced)
     - Mount the O2 `final` directory from your `bcbio` run on your laptop
     - Open up a terminal and make sure you are in your home directory (or a place where you can easily navigate to the mount space)
     - Run the Docker image: `docker run -d -p 8787:8787 -e ROOT=TRUE -v $(pwd):/home/rstudio lpantano/bcbiosinglecell`
-    - From here you can start [Creating the metadata file section](#metadata), and continue working within the Docker container.   
+    - In a browser connect to RStudio: localhost:8787 with user and password: rstudio/rstudio. From here you can start [Creating the metadata file section](#metadata), and continue working within the Docker container to create the QC report.   
     
     ---
     
