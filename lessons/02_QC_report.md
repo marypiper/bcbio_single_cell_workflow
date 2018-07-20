@@ -23,9 +23,23 @@ There are various approaches to running `bcbioSingleCell` to generate the QC rep
 
 2. Running it **locally on your laptop RStudio**. This will require you to install `bcbioSingleCell` and also mount O2. Note that if you have more 400K-500K cells this will max out of memory. Also, note you may have to deal with problems with various dependency packages as you update R. If you choose this method, skip down to [Creating the metadata file section](#metadata) and get started.
 
-3. **Generate the `bcb` object on the O2 cluster**. You are limited to using R 3.4.1 because that is what is available for conda and the modules, but `bcbioSingleCell` is backwards compatible to R 3.4.1. This can be done in one of two ways:
+3. **Generate the `bcb` object on the O2 cluster**. You are limited to using R 3.4.1 because that is what is available for conda and the modules, but `bcbioSingleCell` is backwards compatible to R 3.4.1. The code is as follows:
+
+```r
+	bcbio <- loadSingleCell("~/bcbio/PIs/path/to/final/",
+                        interestingGroups = "sampleName",
+                        sampleMetadataFile = "~/path/to/metadata", 
+                        gtfFile = "~/bcbio/PIs/path/to/Homo_sapiens.GRCh38.90.chr_patch_hapl_scaff.gtf")
+	
+	save(bcbio_output, file="data/bcb.rda")
+```
+
+
+
+This code can be run on O2 in one of two ways:
 
 	a. Using a conda install of R 3.4.1 and pointing to a personal R library. For the conda recipe you can find more information [here](https://steinbaugh.com/r_bioconda). Keep note of the different versions when you create your environment (i.e. pandoc 1 is required for rmarkdown (version 2 is super buggy) and hdf5 1.10.1 is required for the latest version of Seurat, or it won’t compile)
+	
 	b. Using the R 3.4.1 module and pointing to the personal R library. This may require some troubleshooting with the HMSRC folks as it has been known to be problematic.
 	
 		
