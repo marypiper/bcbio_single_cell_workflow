@@ -89,10 +89,12 @@ Use the information from the client to construct the metadata table to use with 
 4. Bring in data from bcbio:
 	
 	```r
-	bcbio <- loadSingleCell("~/bcbio/PIs/path/to/final/",
-                        interestingGroups = "sampleName",
-                        sampleMetadataFile = "~/path/to/metadata", 
-                        gtfFile = "~/bcbio/PIs/path/to/Homo_sapiens.GRCh38.90.chr_patch_hapl_scaff.gtf")
+	bcbio <- bcbioSingleCell("~/bcbio/PIs/path/to/final/",
+                    organism = "Homo sapiens",
+                    interestingGroups = "sampleName",
+                    sampleMetadataFile = "~/path/to/metadata.csv",
+                    ensemblRelease = 92L,
+                    genomeBuild = "GRCh38")
 	
 	save(bcbio_output, file="data/bcb.rda")
 	```
