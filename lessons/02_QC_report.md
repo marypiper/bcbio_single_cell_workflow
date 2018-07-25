@@ -98,23 +98,22 @@ Use the information from the client to construct the metadata table to use with 
 	
 	save(bcbio_output, file="data/bcb.rda")
 	```
-	
-	> **NOTE:** Reading in the GTF file can take a long time.
+
 
 5. Choose the filtering parameters to use. You can start with these parameters, then after viewing the data, change to better values. Generally, you don't want `minGenes`/`minUMIs` to be any lower than 500.  You would hope for at least 1000 genes/UMIs detected per sample. After choosing parameters, run the entire `r setup` chunk by clicking on the green triangle at the top of the setup chunk (if you clear your environment, you need to run the chunk this way to make the `params` reappear.
 	
 	**Choosing parameters**
 	```r
 	params:
-	  bcbFile: "data/bcbRaw.rda"
-	  maxGenes: Inf
-	  maxMitoRatio: 0.1
-	  minCellsPerGene: 3
-	  minGenes: 500 
-	  minNovelty: 0.8
-	  minUMIs: 500
-	  outputDir: .
+    	  bcb_file: "data/bcb.rda"
+    	  min_genes: 500
+          max_genes: !r Inf
+          max_mito_ratio: 0.25
+          min_novelty: 0.85
+          min_cells_per_gene: 10
+          data_dir: !r file.path("data", Sys.Date())
   	```
+	
 	**Running setup chunk**
 	```r
 	# Shared RMarkdown settings
