@@ -255,7 +255,7 @@
  	<img src="../img/sc_clus_sig_pcs.png" width="600">
 
 
-	Based on these plots, we will use 9 principal components for dimensionality reduction calculations.
+	Based on these plots, we will use 10 principal components for dimensionality reduction calculations.
 
 11. Cluster the cells
 
@@ -317,7 +317,7 @@
 	
 	This PCA looks like there may be differentiation occuring, which is separating the clusters. Should not automatically assume that is the case though.
 	
-	<img src="../img/sc_clus_tsne_cyclemarkers.png" width="600">
+	<img src="../img/sc_clus_tsne_clusters.png" width="600">
 
 	**Note that tSNE is not PCA! The measurement of distance in a tSNE plot is difficult to interpret. To better infer separation distance between the putative clusters, let's reapply PCA.**
 
@@ -339,5 +339,7 @@
 14. Adjusting parameters
 
 	Based on your assumptions for the experiment, you may not expect so many clusters or you may expect more clusters. If you do not expect so many clusters, then it would be useful to reduce the resolution used for the clustering in the `FindClusters()` function (step 11) and re-do the rest of this analysis. You can reduce this parameter all the way down to 0.1 if necessary. Similarly, if you expect more clusters, you can increase the resolution.
+	
+	<img src="../img/sc_clus_tsne_clusters_lowres.png" width="600">
 
 15. If you determine that your cells are differentiating, then better to perform analysis using the pseudotime tool from [Monocle](http://cole-trapnell-lab.github.io/monocle-release/).

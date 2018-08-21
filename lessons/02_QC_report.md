@@ -1,19 +1,84 @@
 # bcbioSingleCell QC Report
 
-1. Use the information from the client to construct the metadata table to use with bcbioSingleCell R package according to the specifications detailed at [https://github.com/hbc/bcbioSingleCell](https://github.com/hbc/bcbioSingleCell).
-	- **Important:** the `Sequence` column for the inDrop metadata is the **Forward** sequence, not the same as the sequences present in the `sample_barcodes` file, which is the reverse complement.
+### Different approaches to running `bcbioSingleCell`
 
-### Quality control report
+There are various approaches to running `bcbioSingleCell` to generate the QC report. The first part is getting all of the output from the **`bcbio` final directory loaded in to create the `bcb` object**. The next step is running through code which will **compute metrics and generate figures for quality assessment**. This second step is best done locally so you can run the code interactively and assess things as you run through the report code chunks. For approaches #1 and #2 listed below, you are doing everything locally. For #3 and #4 you are creating the `bcb` object on the cluster, and then moving it local to create the report. 
+
+1. **Using a [Docker image](https://hub.docker.com/r/lpantano/bcbiosinglecell/)**. 
+    - First, install Docker 
+    - Pull the Docker image: `docker pull lpantano/bcbiosinglecell:r3.5-bsc0.1.5`
+    - Set your memory RAM limit to 4G or more. This is done with the Docker main application (Preferences -> Advanced)
+    - Mount the O2 `final` directory from your `bcbio` run on your laptop
+    - Open up a terminal and make sure you are in your home directory (or a place where you can easily navigate to the mount space)
+    - Run the Docker image: `docker run -d -p 8787:8787 -e ROOT=TRUE -v $(pwd):/home/rstudio lpantano/bcbiosinglecell`
+    - In a browser connect to RStudio: localhost:8787 with user and password: rstudio/rstudio. From here you can start [Creating the metadata file](#metadata), and continue working within the Docker container to create the QC report.   
+    
+    ---
+    
+    > **NOTE:** If you start a Docker container and realize you want to start a new one, you will want to kill this one and remove it using the commands below:
+    > ```
+    > docker ps # to see your containers listed by id
+    > docker stop <container_id>
+    > docker rm <container_id> ```
+
+2. Running it **locally on your laptop RStudio**. This will require you to install `bcbioSingleCell` and also mount O2. Note that if you have more 400K-500K cells this will max out of memory. Also, note you may have to deal with problems with various dependency packages as you update R. If you choose this method, skip down to [Creating the metadata file section](#metadata) and get started.
+
+3. **Generate the `bcb` object on the O2 cluster**. You are limited to using R 3.4.1 because that is what is available for conda and the modules, but `bcbioSingleCell` is backwards compatible to R 3.4.1. The code is as follows:
+
+```r
+	bcbio <- loadSingleCell("~/bcbio/PIs/path/to/final/",
+                        interestingGroups = "sampleName",
+                        sampleMetadataFile = "~/path/to/metadata", 
+                        gtfFile = "~/bcbio/PIs/path/to/Homo_sapiens.GRCh38.90.chr_patch_hapl_scaff.gtf")
+	
+	save(bcbio_output, file="data/bcb.rda")
+```
+
+The above code chunk can be run on O2 in one of two ways:
+
+   - **A.** Using a **conda install of R 3.4.1** and pointing to a [shared R library](#rlib). For the conda recipe you can find more information [here](https://steinbaugh.com/r_bioconda). Keep note of the different versions when you create your environment (i.e. pandoc 1 is required for rmarkdown (version 2 is super buggy) and hdf5 1.10.1 is required for the latest version of Seurat, or it won’t compile)
+	
+   - **B.** Using the **R 3.4.1 module** and pointing to the [shared R library](#rlib). This may require some troubleshooting with the HMSRC folks as it has been known to be problematic.
+	
+		
+> #### Using a pre-existing shared R library on O2 (for single cell RNA-seq) <a name="rlib"></a>
+>  This library has been created for use with single cell RNA-seq analysis. It can be used not only for QC but also for clustering with Seurat. First, you will need to edit your `.Renviron` file to have the following inside:
+> 
+> ```
+> R_LIBS_USER="/n/data1/cores/bcbio/R/library/3.4-bioc-release/library"
+> R_MAX_NUM_DLLS=150
+> ```
+> 
+> Then start an interactive session with extra memory and x11:
+> 
+> `$ srun --pty -p interactive -t 0-12:00 --x11 --mem 128G /bin/bash`
+> 
+> After starting the interactive session, load the necessary R modules and start R:
+> 
+> `$ module load gcc/6.2.0 R/3.4.1 hdf5/1.10.1`
+
+
+### Creating the metadata file <a name="metadata"></a>
+
+Use the information from the client to construct the metadata table to use with bcbioSingleCell R package according to the specifications detailed at [https://github.com/hbc/bcbioSingleCell](https://github.com/hbc/bcbioSingleCell). You will need the columns for `description`, `index`, `sequence`, and `sampleName`. You can add any additional metadata as desired.
+
+- **Example metadata table:**
+	
+	![example metadata](../img/sc_metadata.png)
+	
+	- **Important:** the `sequence` column for the inDrop metadata is the **Forward** sequence, not the same as the sequences present in the `sample_barcodes` file, which is the reverse complement. 
+
+### Quality control report <a name="qc"></a>
 
 #### Setting up
 
-2. Choose the quality control template.
+1. Choose the quality control template.
 
 	> Documentation for all functions available from the bcbioSingleCell package is available at [http://bioinformatics.sph.harvard.edu/bcbioSingleCell/reference/index.html](http://bioinformatics.sph.harvard.edu/bcbioSingleCell/reference/index.html)
 
-3. Edit the information in the files `_header.Rmd` and `_footer.Rmd` with experiment-specific information.
+2. Edit the information in the files `_header.Rmd` and `_footer.Rmd` with experiment-specific information.
 
-4. Install `bcbioSingleCell` and load the library:
+3. Install `bcbioSingleCell` and load the library:
 	
 	```r
 	# devtools::install_github("hbc/bcbioSingleCell") # Add argument `ref = "develop"` if need development branch
@@ -21,33 +86,34 @@
 	library(bcbioSingleCell)
 	```
 	
-5. Bring in data from bcbio:
+4. Bring in data from bcbio:
 	
 	```r
-	bcbio <- loadSingleCell("~/bcbio/PIs/path/to/final/",
-                        interestingGroups = "sampleName",
-                        sampleMetadataFile = "~/path/to/metadata", 
-                        gtfFile = "~/bcbio/PIs/path/to/Homo_sapiens.GRCh38.90.chr_patch_hapl_scaff.gtf")
+	bcbio <- bcbioSingleCell("~/bcbio/PIs/path/to/final/",
+                    organism = "Homo sapiens",
+                    interestingGroups = "sampleName",
+                    sampleMetadataFile = "~/path/to/metadata.csv",
+                    ensemblRelease = 92L,
+                    genomeBuild = "GRCh38")
 	
 	save(bcbio_output, file="data/bcb.rda")
 	```
-	
-	> **NOTE:** Reading in the GTF file can take a long time.
 
-6. Choose the filtering parameters to use. You can start with these parameters, then after viewing the data, change to better values. Generally, you don't want `minGenes`/`minUMIs` to be any lower than 500.  You would hope for at least 1000 genes/UMIs detected per sample. After choosing parameters, run the entire `r setup` chunk by clicking on the green triangle at the top of the setup chunk (if you clear your environment, you need to run the chunk this way to make the `params` reappear.
+
+5. Choose the filtering parameters to use. You can start with these parameters, then after viewing the data, change to better values. Generally, you don't want `minGenes`/`minUMIs` to be any lower than 500.  You would hope for at least 1000 genes/UMIs detected per sample. After choosing parameters, run the entire `r setup` chunk by clicking on the green triangle at the top of the setup chunk (if you clear your environment, you need to run the chunk this way to make the `params` reappear.
 	
 	**Choosing parameters**
 	```r
 	params:
-	  bcbFile: "data/bcbRaw.rda"
-	  maxGenes: 6500
-	  maxMitoRatio: 0.1
-	  minCellsPerGene: 3
-	  minGenes: 500 
-	  minNovelty: 0.8
-	  minUMIs: 500
-	  outputDir: .
+    	  bcb_file: "data/bcb.rda"
+    	  min_genes: 500
+          max_genes: !r Inf
+          max_mito_ratio: 0.25
+          min_novelty: 0.85
+          min_cells_per_gene: 10
+          data_dir: !r file.path("data", Sys.Date())
   	```
+	
 	**Running setup chunk**
 	```r
 	# Shared RMarkdown settings
@@ -72,9 +138,9 @@
 	sampleMetadata(bcb)
 	```
 
-7. For the count alignment, be sure to update the **linked Ensembl** to be accurate for the organism. This information is present in the file: `_footer.Rmd`. 
+6. For the count alignment, be sure to update the **linked Ensembl** to be accurate for the organism. This information is present in the file: `_footer.Rmd`. 
 
-8. To explore the raw data stored inside the `bcb` object, the following functions can be helpful:
+7. To explore the raw data stored inside the `bcb` object, the following functions can be helpful:
 	
 	```r
 	# Access metadata for each sample: "sampleID", "sampleName", "description", "fileName", "index", "sequence", "revcomp"
@@ -84,7 +150,7 @@
 	colData(bcb)
 	
 	# Access raw counts - each column represents a single cell
-	counts <- as.data.frame(as.matrix((assay(bcb))))
+	counts <- counts(bcb)
 	
 	# Can return cells from a particular sample by using metadata information about which sample corresponds to each barcode
 	unsort_counts <- counts[, str_detect(colnames(counts), "run1_ATTAGACG")] # Return only the counts for the `Unsorted` sample
@@ -100,10 +166,10 @@
 
 ##### Reads per cell
 
-9. Evaluate the number of reads per cell:
+8. Evaluate the number of reads per cell:
 
 	```r
-	plotReadsPerCell(bcb, filterCells = FALSE)
+	plotReadsPerCell(bcb)
 	```
 	
 	The three plots give different ways of looking at the number of reads per cell. Generally you would like to see a large peak at around 10,000 reads per cell, and you hope your filtering threshold of 1,000 reads per cell used in bcbio has removed the poor quality cells with few number of reads. The filtering threshold of 1,000 is represented by the vertical dotted line.
@@ -118,10 +184,10 @@
 	
 ##### Cell counts
 
-10. Determine the number of cells detected per sample:
+9. Determine the number of cells detected per sample:
 
 	```r
-	plotCellCounts(bcb, filterCells = FALSE)
+	plotCellCounts(bcb)
 	```
 
 	The cell counts are determined by the number of unique cellular barcodes detected. During the inDrop protocol, the cellular barcodes are present in the hydrogels, which are encapsulated in the droplets with a single cell and lysis/reaction mixture. Upon treatment of UV and cell lysis, all components mix together inside the droplet and reverse transcription proceeds, followed by droplet breakup and linear amplification for library preparation. While each hydrogel should have a single cellular barcode associated with it, occasionally a hydrogel can have more than one cellular barcode. We often see all possible combinations of cellular barcodes at a low level, leading to a higher number of cellular barcodes than cells.
@@ -132,12 +198,11 @@
 
 ##### UMI counts per cell
 
-11. Determine the number of UMI counts (transcripts) per cell:
+10. Determine the number of UMI counts (transcripts) per cell:
 
 	```r
 	plotUMIsPerCell(
     		bcb,
-    		filterCells = FALSE,
 	    	min = params$minUMIs)
 	```
 
@@ -149,12 +214,11 @@
 	
 ##### Genes detected per cell
 
-12. Discover the number of genes detected per cell:
+11. Discover the number of genes detected per cell:
 
 	```r
 	plotGenesPerCell(
 	    bcb,
-	    filterCells = FALSE,
 	    min = params$minGenes,
 	    max = params$maxGenes)
 	```
@@ -167,10 +231,10 @@
 	
 ##### UMIs vs. genes detected
 
-13. Identify whether large number of poor quality cells present in any samples with low UMI/genes detected:
+12. Identify whether large number of poor quality cells present in any samples with low UMI/genes detected:
 
 	```r
-	plotUMIsVsGenes(bcb, filterCells = FALSE)
+	plotUMIsVsGenes(bcb)
 	```
 
 	Poor quality cells are likely to have low genes and UMIs per cell. Therefore, a poor sample is likely to have cells in the lower left of the graph. Good cells should exhibit both higher number of genes per cell and higher numbers of UMIs. We also expect similar lines with similar slopes for all samples.
@@ -181,12 +245,11 @@
 	
 ##### Mitochondrial counts ratio
 
-14. Identify whether there is a large amount of mitochondrial contamination from dead or dying cells:
+13. Identify whether there is a large amount of mitochondrial contamination from dead or dying cells:
 
 	```r
 	plotMitoRatio(
 	    bcb,
-	    filterCells = FALSE,
 	    max = params$maxMitoRatio)
 	```
 	
@@ -198,12 +261,11 @@
 	
 ##### Novelty
 
-15. Explore the novelty for contamination with low complexity cell types:
+14. Explore the novelty for contamination with low complexity cell types:
 
 	```r
 	plotNovelty(
 	    bcb,
-	    filterCells = FALSE,
 	    min = params$minNovelty)
 	```
 	
@@ -216,7 +278,7 @@
 
 ##### Filtered results
 
-16. Run the filtering criteria and explore the plots again. The metrics should have improved greatly after removing low gene/UMI cells and high mitochondrial cells.
+15. Run the filtering criteria and explore the plots again. The metrics should have improved greatly after removing low gene/UMI cells and high mitochondrial cells.
 
 	```r
 	bcbFiltered <- filterCells(bcb,
@@ -272,7 +334,7 @@
 	
 	<img src="../img/sc_qc_filtered_novelty.png" width="500">
 	
-17. When you are satisfied with the filtered results, save the filtered data. You may need to adjust the filtering criteria multiple times to optimize the filtering results prior to saving the report.
+16. When you are satisfied with the filtered results, save the filtered data. You may need to adjust the filtering criteria multiple times to optimize the filtering results prior to saving the report.
 
 	```r
 	assignAndSaveData(name = "bcbFiltered", object = bcbFiltered, dir = dataDir)
