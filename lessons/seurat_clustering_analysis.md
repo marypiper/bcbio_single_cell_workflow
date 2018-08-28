@@ -115,7 +115,8 @@ To identify clusters, the following steps will be performed:
 4. Identification of the primary sources of heterogeneity using principal component (PC) analysis and heatmaps.
 5. Clustering cells based on significant PCs (metagenes).
 
-## Pre-regression
+## Pre-regression workflow
+
 To run this workflow optimally, we have split the workflow into pre-regression and regression steps. To run the pre-regression steps outlined below, we have a [`clustering_pre_regress.R`](../scripts/clustering_pre_regress.R) script that you can run on O2.
 
 ### Setting up the R environment
@@ -141,14 +142,12 @@ set.seed(1454944673L)
 seurat_raw <- readRDS(file.path(data_dir, "seurat_raw.rds"))
 ```
 
-### Subsetting to a single sample
-
-Often identifying cell types is easiest for a single sample type. To subset the Seurat object, we can use the `SubsetData()` function. For example:
-
-```r
-pre_regressed_white <- SubsetData(pre_regressed_seurat, 
-                                cells.use = rownames(pre_regressed_seurat@meta.data[which(pre_regressed_seurat@meta.data$interestingGroups == "white")])
-```
+>**NOTE:** Often identifying cell types is easiest for a single sample type. To subset the Seurat object, we can use the `SubsetData()` function. For example:
+>
+>```r
+> pre_regressed_seurat <- SubsetData(seurat_raw, 
+>                                cells.use = rownames(seurat_raw@meta.data[which(seurat_raw@meta.data$interestingGroups == "control")])
+>```
 
 ### Normalizing counts, finding variable genes, and scaling the data
 
@@ -251,7 +250,9 @@ saveRDS(pre_regressed_seurat, file = file.path(data_dir, "seurat_pre_regress.rds
 
 ## Apply regression variables
 
-Here we are regressing out variables of uninteresting variation, using the `vars.to.regress` argument in the `ScaleData()` function. When variables are defined in the `vars.to.regress` argument, [Seurat][] regresses them individually against each gene, then rescales and centers the resulting residuals.
+To run these regression steps outlined below, we have a [`clustering_regress.R`](../scripts/clustering_regress.R) script that can be run on O2. The scripts do not include the visualizations, but these can be included in the final report.
+
+In this step, we are regressing out variables of uninteresting variation, using the `vars.to.regress` argument in the `ScaleData()` function. When variables are defined in the `vars.to.regress` argument, [Seurat][] regresses them individually against each gene, then rescales and centers the resulting residuals.
 
 We generally recommend minimizing the effects of variable read count depth (`nUMI`) and mitochondrial gene expression (`mitoRatio`) as a standard first-pass approach. If the differences in mitochondrial gene expression represent a biological phenomenon that may help to distinguish cell clusters, then we advise not passing in `mitoRatio` here.
 
@@ -367,11 +368,11 @@ TSNEPlot(object = seurat)
 ```r
 # Save clustered cells
 
-saveRDS(seurat, file = file.path(data_dir, "seurat_tsne.rds"))
+saveRDS(seurat, file = file.path(data_dir, "name_seurat_tsne.rds"))
 ```
+# Creating the clustering report
 
+To create the clustering report, `rsync` the `seurat_tsne.rds` object to your local computer and run the code for the visualizations as provided in the [template]().
 
-> ***NOTE:***
-> - *Use dev.off() if you want to save the figures generated.*
 > - *Use the saved Seurat objects on a local computer to make report with figures.*
 > - *rsync your data if you work on the cluster and local computer with the same data.*
