@@ -329,7 +329,7 @@ Seurat uses a graph-based clustering approach, inspired by SNN-Cliq [@Xu2015-je]
 
 The `FindClusters()` function implements the procedure, and contains a `resolution` argument that sets the "granularity" of the downstream clustering, with increased values leading to a greater number of clusters. We find that setting this parameter between `0.6`-`1.2` typically returns good results for single cell datasets of around 3K cells. Optimal resolution often increases for larger datasets. The clusters are saved in the `seurat@ident` slot.
 
-Regarding the value of the `resolution` argument, use a value < 1 if you want to obtain fewer clusters.
+Regarding the value of the `resolution` argument, use a value < 1 if you want to obtain fewer clusters. We provide a series of options and downstream we can choose the best resolution.
 
 ```r
 # Find cell clusters
@@ -339,17 +339,9 @@ seurat <- FindClusters(
   dims.use = 1:pcs,
   force.recalc = TRUE,
   print.output = TRUE,
-  resolution = 0.8,
+  resolution = c(0.6, 0.8, 1.0, 1.2),
   save.SNN = TRUE)
 ```
-A useful feature in [Seurat][] v2.0 is the ability to recall the parameters that were used in the latest function calls for commonly used functions. For `FindClusters()`, the authors provide the function `PrintFindClustersParams()` to print a nicely formatted formatted summary of the parameters that were chosen.
-
-```r
-PrintFindClustersParams(seurat)
-```
-
-# Run non-linear dimensional reduction
-
 ## t-SNE
 
 [Seurat][] continues to use t-distributed stochastic neighbor embedding (t-SNE) as a powerful tool to visualize and explore these datasets. While we no longer advise clustering directly on t-SNE components, cells within the graph-based clusters determined above should co-localize on the t-SNE plot. This is because the t-SNE aims to place cells with similar local neighborhoods in high-dimensional space together in low-dimensional space. As input to the t-SNE, we suggest using the same PCs as input to the clustering analysis, although computing the t-SNE based on scaled gene expression is also supported using the `genes.use` argument.
@@ -361,8 +353,22 @@ seurat <- RunTSNE(
   seurat,
   dims.use = 1:pcs,
   do.fast = TRUE)
-  
+```
+
+Explore the clustering with the different resolutions to choose the most appropriate.
+
+```r
+# Choose a resolution
+seurat <- SetAllIdent(object = seurat, id = "res.0.8")
+
+# Plot the TSNE
 TSNEPlot(object = seurat)
+```
+
+Once a resolution has been chosen, a useful feature in [Seurat][] v2.0 is the ability to recall the parameters that were used in the latest function calls for commonly used functions. For `FindClusters()`, the authors provide the function `PrintFindClustersParams()` to print a nicely formatted formatted summary of the parameters that were chosen.
+
+```r
+PrintFindClustersParams(seurat)
 ```
 
 ```r
