@@ -8,11 +8,11 @@ tags: [clustering]
 
 # Seurat singlecell RNA-Seq clustering analysis
 
-This is a clustering analysis workflow to be run mostly on O2 using the output from the QC which is the `bcb_filtered` object. This workflow incorporates **Lorena's scripts** to set up for clustering run. 
+This is a clustering analysis workflow to be run mostly on O2 using the output from the QC which is the `bcb_filtered` object. This workflow incorporates [**Lorena's script**](https://github.com/hbc/hbcABC/blob/master/inst/rmarkdown/Rscripts/singlecell/from_bcb_to_seurat.R) to set up for clustering run by changing the `bcb` object output to a `seurat` object. 
 
 ## Creating Seurat object at the end of the QC analysis
 
-The first thing needed is to convert the `bcb_filtered` object in the QC to a Seurat object. We can do this by running Lorena's `bcb_to_seurat.R` script at the end of the QC analysis. The contents of the script are described below.
+The first thing needed is to convert the `bcb_filtered` object in the QC to a Seurat object. We can do this by running Lorena's [`bcb_to_seurat.R`](https://github.com/hbc/hbcABC/blob/master/inst/rmarkdown/Rscripts/singlecell/from_bcb_to_seurat.R) script at the end of the QC analysis. The contents of the script are described below.
 
 ### Setting up the parameters
 
@@ -115,6 +115,8 @@ To identify clusters, the following steps will be performed:
 4. Identification of the primary sources of heterogeneity using principal component (PC) analysis and heatmaps.
 5. Clustering cells based on significant PCs (metagenes).
 
+## Pre-regression
+To run this workflow optimally, we have split the workflow into pre-regression and regression steps. To run the pre-regression steps outlined below, we have a [`clustering_pre_regress.R`](../scripts/clustering_pre_regress.R) script that you can run on O2.
 
 ### Setting up the R environment
 
