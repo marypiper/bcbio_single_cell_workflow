@@ -347,20 +347,17 @@ seurat <- FindClusters(
 [Seurat][] continues to use t-distributed stochastic neighbor embedding (t-SNE) as a powerful tool to visualize and explore these datasets. While we no longer advise clustering directly on t-SNE components, cells within the graph-based clusters determined above should co-localize on the t-SNE plot. This is because the t-SNE aims to place cells with similar local neighborhoods in high-dimensional space together in low-dimensional space. As input to the t-SNE, we suggest using the same PCs as input to the clustering analysis, although computing the t-SNE based on scaled gene expression is also supported using the `genes.use` argument.
 
 ```r
-# Run the TSNE and plot
+# Choose a resolution
+seurat <- SetAllIdent(object = seurat, id = "res.0.8")
 
+# Run the TSNE and plot
 seurat <- RunTSNE(
   seurat,
   dims.use = 1:pcs,
   do.fast = TRUE)
 ```
 
-Explore the clustering with the different resolutions to choose the most appropriate.
-
 ```r
-# Choose a resolution
-seurat <- SetAllIdent(object = seurat, id = "res.0.8")
-
 # Plot the TSNE
 TSNEPlot(object = seurat)
 ```
