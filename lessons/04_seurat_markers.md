@@ -11,7 +11,7 @@ ssh -XY username@o2.hms.harvard.edu
 
 srun --pty -p interactive -t 0-12:00 --x11 --mem 128G /bin/bash
 
-module load gcc/6.2.0 R/3.4.1 hdf5/1.10.1
+module load gcc/6.2.0 R/3.5.1 hdf5/1.10.1
 
 R
 ```
