@@ -1,1 +1,1 @@
-The contents of this repo are now outdated. The scRNA-seq workflow that is being continually updated can be found at https://hbctraining.github.io/scRNA-seq/.
+The Seurat-based lessons of this repo are now outdated. The updated scRNA-seq workflow from QC to marker identification can be found at https://hbctraining.github.io/scRNA-seq/. 
